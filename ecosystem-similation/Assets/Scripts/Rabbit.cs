@@ -5,8 +5,8 @@ public class Rabbit : MonoBehaviour
 {
     [SerializeField]
     private float tolerance;
-    [SerializeField]
-    private GameObject indicator;
+
+    public GameObject Indicator;
 
     private Vector3 destination;
     private NavMeshAgent agent;
@@ -26,26 +26,26 @@ public class Rabbit : MonoBehaviour
             GotoDestination(destination);
         } else
         {
-            // find a new destination after few seconds
-            // TODO: wait for 2 seconds
-            destination = CreateRandDestination(20);
-            Vector3 dir = destination - transform.position;
-            Debug.DrawRay(transform.position, dir, Color.red, 10f, false);
+            Debug.Log("Now close enough!");
+            FoolAround(20);
         }
         
     }
 
    
 
-    private void GotoDestination(Vector3 destination)
+    private void GotoDestination(Vector3 n_destination)
     {
-        agent.destination = destination;
+        destination = n_destination;
+        Vector3 dir = destination - transform.position;
+        Debug.DrawRay(transform.position, dir, Color.red, 0.1f, false);
+        agent.SetDestination(destination);
     }
 
     private void FoolAround(float radius)
     {
-        // 
-
+        destination = CreateRandDestination(radius);
+        
     }
 
     private bool IsCloseEnough(float tolerance)
@@ -62,28 +62,68 @@ public class Rabbit : MonoBehaviour
 
     // Creates a random destination with given radius (y = 0)
     private Vector3 CreateRandDestination(float radius)
-    {
-        float x = Random.Range(0, radius);
-        float z = Mathf.Pow(Mathf.Pow(radius, 2) - Mathf.Pow(x, 2), 0.5f);
+    {   
+        bool signMultiplier_0 = (Random.value < 0.5);
         bool signMultiplier_1 = (Random.value < 0.5);
         bool signMultiplier_2 = (Random.value < 0.5);
+
+        float x = Random.Range(0, radius);
+        float z = Mathf.Pow(Mathf.Pow(radius, 2) - Mathf.Pow(x, 2), 0.5f);
+
+        if (signMultiplier_0)
+        {
+            float temp = x;
+            x = z;
+            z = temp;
+        }
+
         if (!signMultiplier_1)
             x *= -1f;
+
         if (!signMultiplier_2)
             z *= -1f;
+
         x /= Random.Range(1f, 3f);
         z /= Random.Range(1f, 3f);
 
-        Vector3 newDestination = new Vector3(x, 0, z);
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(newDestination, out hit, 1f, NavMesh.AllAreas)) // if destination is on navmesh
-        {
-            return newDestination;
-        }
-        CreateRandDestination(radius);
+        destination = new Vector3(x, 0, z) +
+            new Vector3(transform.position.x, 0, transform.position.y) +
+            new Vector3(transform.forward.x * radius / 2f, 0
+            , transform.forward.z * radius / 2f);
 
-        return Vector3.zero;
-                  
+        NavMeshPath path = new NavMeshPath();
+        agent.CalculatePath(destination, path);
+
+        if (path.status == NavMeshPathStatus.PathPartial) // if not reachable
+        {
+            CreateRandDestination(radius);
+        }
+
+        return destination;
+
     }
+
+
+    private void EatFood(Transform food)
+    {
+        Instantiate(Indicator, food.transform);
+        destination = new Vector3(food.transform.position.x, 0, food.transform.position.z);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //Check to see if the tag on the collider is equal to Enemy 
+        if (other.tag == "Food")
+        {
+            EatFood(other.GetComponentInParent<Transform>());
+            Debug.Log("Triggered by Food");
+        }
+        if (other.tag == "Water")
+        {
+            Debug.Log("Triggered by Water");
+        }
+    }
+
+
 
 }
