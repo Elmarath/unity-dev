@@ -8,13 +8,14 @@ public class Rabbit : MonoBehaviour
 
     public GameObject Indicator;
 
+    private bool readyToMoveNextLoc;
     private Vector3 destination;
     private NavMeshAgent agent;
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        destination = CreateRandDestination(15); 
+        destination = CreateRandDestination(15);
     }
 
     private void Update()
@@ -26,7 +27,6 @@ public class Rabbit : MonoBehaviour
             GotoDestination(destination);
         } else
         {
-            Debug.Log("Now close enough!");
             FoolAround(20);
         }
         
@@ -46,6 +46,12 @@ public class Rabbit : MonoBehaviour
     {
         destination = CreateRandDestination(radius);
         
+    }
+
+    private bool IsReadyToMoveNextLocation()
+    {
+
+        return true;
     }
 
     private bool IsCloseEnough(float tolerance)
@@ -104,10 +110,15 @@ public class Rabbit : MonoBehaviour
     }
 
 
-    private void EatFood(Transform food)
+    private void GoForFood(Transform food)
     {
         Instantiate(Indicator, food.transform);
         destination = new Vector3(food.transform.position.x, 0, food.transform.position.z);
+    }
+
+    private void EatFood()
+    {
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -115,7 +126,7 @@ public class Rabbit : MonoBehaviour
         //Check to see if the tag on the collider is equal to Enemy 
         if (other.tag == "Food")
         {
-            EatFood(other.GetComponentInParent<Transform>());
+            GoForFood(other.GetComponentInParent<Transform>());
             Debug.Log("Triggered by Food");
         }
         if (other.tag == "Water")
@@ -123,7 +134,4 @@ public class Rabbit : MonoBehaviour
             Debug.Log("Triggered by Water");
         }
     }
-
-
-
 }
