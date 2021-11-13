@@ -64,7 +64,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7405193051865470686}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 10
@@ -84,7 +84,9 @@ MonoBehaviour:
   normalSpeed: 5
   waitTime: 1
   wonderRadius: 15
+  foodLocation: {x: 0, y: 0, z: 0}
   foundFood: 0
+  isHungry: 1
   indicator: {fileID: 892497948501337228, guid: bd0b2974b01f449c99d86688adbe9dc5, type: 3}
 --- !u!1 &7405193052924247929
 GameObject:

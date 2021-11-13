@@ -9,7 +9,9 @@ public class Animal : MonoBehaviour
     public StateMachine movementSM;
     public Idle idle;
     public SearchForFood searchForFood;
+    public GoForFood goForFood;
     public WanderAround wanderAround;
+    public EatFood eatFood;
     #endregion
 
     #region AnimalVeraiableAttributes
@@ -19,6 +21,8 @@ public class Animal : MonoBehaviour
     public Vector3 foodLocation;
     public bool foundFood;
     public bool isHungry = false;
+    public GameObject targetFood;
+    public GameObject foodToBeEaten;
     #endregion
 
     #region Attachments
@@ -34,6 +38,8 @@ public class Animal : MonoBehaviour
         idle = new Idle(this, movementSM);
         wanderAround = new WanderAround(this, movementSM);
         searchForFood = new SearchForFood(this, movementSM);
+        goForFood = new GoForFood(this, movementSM);
+        eatFood = new EatFood(this, movementSM);
 
         movementSM.Initialize(idle);
     }
@@ -45,9 +51,7 @@ public class Animal : MonoBehaviour
 
     void Update()
     {
-
         movementSM.CurrentState.HandleInput();
-
         movementSM.CurrentState.LogicUpdate();
     }
 
@@ -119,6 +123,7 @@ public class Animal : MonoBehaviour
     {
         if (other.CompareTag("Food"))
         {
+            targetFood = other.gameObject;
             foodLocation = other.transform.position;
             foundFood = true;
         }
@@ -128,6 +133,7 @@ public class Animal : MonoBehaviour
         if (other.CompareTag("Food"))
         {
             foundFood = false;
+            foodToBeEaten = null;
         }
     }
 

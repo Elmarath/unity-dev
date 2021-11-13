@@ -22,10 +22,11 @@ public class WanderAround : State
     {
         base.Enter();
         // Set a destination
-        destination = animal.CreateRandDestination(animal.wonderRadius);
-        animal.GotoDestination(destination);
         _isHungry = animal.isHungry;
         speed = animal.normalSpeed;
+        destination = animal.CreateRandDestination(animal.wonderRadius);
+        animal.GotoDestination(destination);
+
         wander = true;
 
     }
@@ -46,12 +47,7 @@ public class WanderAround : State
     {
         base.LogicUpdate();
 
-        if (_isHungry)
-        {
-            stateMachine.ChangeState(animal.searchForFood);
-        }
-
-        else if (isArrived)
+        if (isArrived)
         {
             stateMachine.ChangeState(animal.idle);
         }

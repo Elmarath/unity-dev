@@ -35,14 +35,14 @@ public class Idle : State
 
         // if sees a predator exit
 
-        // TODO: if sees a food and hungry exit
+        // TODO: if hungry exit
+        _isHungry = animal.isHungry;
+        // TODO: if thirsty exit
 
-        // TODO: if sees a water and thirsty exit
-
-        // TODO: if sees a mate and horny exit
+        // TODO: if horny exit
 
         // after curtain time exit
-        _isHungry = animal.isHungry;
+
 
         if (_waitTime <= 0f)
         {
@@ -58,7 +58,6 @@ public class Idle : State
         {
             stateMachine.ChangeState(animal.searchForFood);
         }
-
         else if (isWaitTimeOver)
         {
             stateMachine.ChangeState(animal.wanderAround);

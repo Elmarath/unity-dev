@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class Food : MonoBehaviour
 {
-    private Renderer _spriteRenderer;
+    public float getEatenTime = 5;
 
     [SerializeField]
-    private float fadeInTime;
-    [SerializeField]
-    private float fadeOutTime;
-    [SerializeField]
-    private float fadeDelay;
+    private float reGrowDelay = 15;
     [SerializeField]
     private Vector3 eatenScale;
     [SerializeField]
@@ -19,9 +15,8 @@ public class Food : MonoBehaviour
     [SerializeField]
     private Color edibleColor;
 
+    private Renderer _spriteRenderer;
     private Vector3 edibleScale;
-    private Vector3 eatenTempScale; // garbage
-    // Start is called before the first frame update
 
     public bool isEatable = true;
 
@@ -33,43 +28,36 @@ public class Food : MonoBehaviour
 
     private void Start()
     {
-        if (isEatable)
-        {
-            GetEaten();
-        }
+        this.transform.localScale = edibleScale;
+        this._spriteRenderer.material.color = edibleColor;
     }
 
-    public void GetEaten()
+    public bool GetEaten()
     {
-        StartCoroutine(GetEatenCoroutine());
+        if (isEatable)
+        {
+            StartCoroutine(GetEatenCoroutine());
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     IEnumerator GetEatenCoroutine()
     {
+        yield return new WaitForSeconds(getEatenTime);
         isEatable = false;
-        for (float t = 0.01f; t < fadeInTime; t += 0.1f)
-        {
-            this.transform.localScale = Vector3.Lerp(edibleScale, eatenScale, t / fadeOutTime);
-            _spriteRenderer.material.color = Color.Lerp(edibleColor, eatenColor, t / fadeOutTime);
-            yield return null;
-        }
-        eatenTempScale = this.transform.localScale;
-        _spriteRenderer.material.color = eatenColor;
-        yield return new WaitForSeconds(fadeDelay);
-
-        StartCoroutine(RegrowCoroutine());
+        this.transform.localScale = eatenScale;
+        this._spriteRenderer.material.color = eatenColor;
     }
 
-    IEnumerator RegrowCoroutine()
+    IEnumerator ReGrowCoroutine()
     {
-        for (float t = 0.01f; t < fadeOutTime; t += 0.1f)
-        {
-            this.transform.localScale = Vector3.Lerp(eatenTempScale, edibleScale, t / fadeInTime);
-            _spriteRenderer.material.color = Color.Lerp(eatenColor, edibleColor, t / fadeInTime);
-            yield return null;
-        }
-        _spriteRenderer.material.color = edibleColor;
-        this.transform.localScale = edibleScale;
+        yield return new WaitForSeconds(reGrowDelay);
         isEatable = true;
+        this.transform.localScale = edibleScale;
+        this._spriteRenderer.material.color = edibleColor;
     }
 }
