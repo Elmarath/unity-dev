@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7405193051865470689}
-  - component: {fileID: 7405193051865470688}
   - component: {fileID: 7405193051865470691}
   - component: {fileID: 2223813533118214251}
+  - component: {fileID: 926722963}
   m_Layer: 6
   m_Name: Rabbit
   m_TagString: Rabbit
@@ -34,20 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7405193051865470688
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7405193051865470686}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37a3ac98915614f60a10add52391c1b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tolerance: 0.3
-  indicator: {fileID: 892497948501337228, guid: bd0b2974b01f449c99d86688adbe9dc5, type: 3}
 --- !u!195 &7405193051865470691
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -83,6 +69,23 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 10
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &926722963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7405193051865470686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd2938c99cfd41c9aa7f9769f0e562c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  normalSpeed: 5
+  waitTime: 1
+  wonderRadius: 15
+  foundFood: 0
+  indicator: {fileID: 892497948501337228, guid: bd0b2974b01f449c99d86688adbe9dc5, type: 3}
 --- !u!1 &7405193052924247929
 GameObject:
   m_ObjectHideFlags: 0

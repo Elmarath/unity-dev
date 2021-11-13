@@ -7,10 +7,11 @@ public class Idle : State
     private bool isIdle;
     private bool isWaitTimeOver;
     private float _waitTime;
+    private bool _isHungry;
 
     public Idle(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
     {
-        
+
     }
 
     public override void Enter()
@@ -41,7 +42,9 @@ public class Idle : State
         // TODO: if sees a mate and horny exit
 
         // after curtain time exit
-        if(_waitTime <= 0f)
+        _isHungry = animal.isHungry;
+
+        if (_waitTime <= 0f)
         {
             isWaitTimeOver = true;
         }
@@ -51,7 +54,12 @@ public class Idle : State
     {
         base.LogicUpdate();
 
-        if (isWaitTimeOver)
+        if (isWaitTimeOver && _isHungry)
+        {
+            stateMachine.ChangeState(animal.searchForFood);
+        }
+
+        else if (isWaitTimeOver)
         {
             stateMachine.ChangeState(animal.wanderAround);
         }

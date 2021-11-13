@@ -6,7 +6,9 @@ public class WanderAround : State
 {
     private bool wander;
     private bool isArrived;
+    private bool _isHungry;
     private float speed;
+
 
     private Vector3 destination;
 
@@ -21,38 +23,36 @@ public class WanderAround : State
         base.Enter();
         // Set a destination
         destination = animal.CreateRandDestination(animal.wonderRadius);
-
         animal.GotoDestination(destination);
-
+        _isHungry = animal.isHungry;
         speed = animal.normalSpeed;
         wander = true;
+
     }
 
     public override void Exit()
     {
         base.Exit();
+        isArrived = false;
         wander = false;
     }
     public override void HandleInput()
     {
         base.HandleInput();
-        wander = !Input.GetKeyDown(KeyCode.Space);          
+        isArrived = animal.IsCloseEnough(destination, 0.1f);
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
 
-        isArrived = animal.IsCloseEnough(destination, 0.1f);
-
-        if (!wander)
+        if (_isHungry)
         {
-            stateMachine.ChangeState(animal.idle);
+            stateMachine.ChangeState(animal.searchForFood);
         }
 
-        if (isArrived)
+        else if (isArrived)
         {
-            Debug.Log("Has Arrived");
             stateMachine.ChangeState(animal.idle);
         }
     }
