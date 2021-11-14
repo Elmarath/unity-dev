@@ -9,7 +9,7 @@ public class Food : MonoBehaviour
     [SerializeField]
     private float reGrowDelay = 15;
     [SerializeField]
-    private Vector3 eatenScale;
+    private float eatenScaleDivider = 3;
     [SerializeField]
     private Color eatenColor;
     [SerializeField]
@@ -17,6 +17,7 @@ public class Food : MonoBehaviour
 
     private Renderer _spriteRenderer;
     private Vector3 edibleScale;
+    private Vector3 eatenScale;
 
     public bool isEatable = true;
     public bool isStartedToBeEaten = false;
@@ -25,6 +26,7 @@ public class Food : MonoBehaviour
     {
         _spriteRenderer = this.transform.GetComponent<Renderer>();
         edibleScale = this.transform.localScale;
+        eatenScale = edibleScale / eatenScaleDivider;
     }
 
     private void Start()

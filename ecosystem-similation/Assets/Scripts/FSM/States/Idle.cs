@@ -7,6 +7,7 @@ public class Idle : State
     private bool isWaitTimeOver;
     private float _waitTime;
     private bool _isHungry;
+    private bool readyToDie;
 
     public Idle(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
     {
@@ -15,8 +16,6 @@ public class Idle : State
 
     public override void Enter()
     {
-        Debug.Log("Idle");
-
         base.Enter();
         _waitTime = animal.waitTime;
 
@@ -26,6 +25,7 @@ public class Idle : State
     public override void Exit()
     {
         base.Exit();
+        readyToDie = false;
     }
     public override void HandleInput()
     {
@@ -35,6 +35,7 @@ public class Idle : State
         // if sees a predator exit
 
         // TODO: if hungry exit
+        animal.isHungry = (animal.curHunger < 70);
         _isHungry = animal.isHungry;
         // TODO: if thirsty exit
 
@@ -47,11 +48,21 @@ public class Idle : State
         {
             isWaitTimeOver = true;
         }
+
+        if (animal.curHunger <= 0)
+        {
+            readyToDie = true;
+        }
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+
+        if (readyToDie)
+        {
+            animal.Die();
+        }
 
         if (isWaitTimeOver && _isHungry)
         {

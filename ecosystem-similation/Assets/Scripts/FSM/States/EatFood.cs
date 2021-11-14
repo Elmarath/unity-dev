@@ -17,12 +17,9 @@ public class EatFood : State
 
     public override void Enter()
     {
-        Debug.Log("Eating food!!");
-
         base.Enter();
         _foodToBeEatenRef = animal.foundedFood.GetComponent<Food>();
         _foodToBeEatenRef.GetEaten();
-        Debug.Log("Started eating Food");
     }
 
     public override void Exit()
@@ -43,6 +40,7 @@ public class EatFood : State
         if (isFoodFinished)
         {
             stateMachine.ChangeState(animal.idle);
+            animal.curHunger += animal.gettingFullMultiplier;
         }
 
         if (exitState)

@@ -36,7 +36,7 @@ public class WanderAround : State
     public override void HandleInput()
     {
         base.HandleInput();
-        isArrived = animal.IsCloseEnough(destination, 0.1f);
+        isArrived = animal.IsCloseEnough(destination, 1f);
     }
 
     public override void LogicUpdate()

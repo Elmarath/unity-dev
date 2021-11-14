@@ -16,8 +16,6 @@ public class GoForFood : State
 
     public override void Enter()
     {
-        Debug.Log("Going For Food!!");
-
         base.Enter();
         foundedFood = animal.foundedFood;
         _foodLocation = animal.foundedFood.transform.position;

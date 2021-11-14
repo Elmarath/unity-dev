@@ -14,7 +14,10 @@ public class Animal : MonoBehaviour
     public float viewAngle = 100f;
     [Range(1, 5)]
     public float minSearchDistance = 2f;
-    public float maxHunder = 100f;
+    public float maxHunger = 100f;
+    [Range(0.25f, 10)]
+    public float gettingHungryRate = 2f; // deletes x point per sec
+    public float gettingFullMultiplier = 30f;
     #endregion
 
     #region 
@@ -52,8 +55,13 @@ public class Animal : MonoBehaviour
 
     #region Attachments
     private NavMeshAgent agent;
+    private HungerBar hungerBar;
     public GameObject indicator;
     #endregion
+
+    #region animalSurvivalVariables
+    public float curHunger;
+    #endregion 
 
     private void Awake()
     {
@@ -68,16 +76,30 @@ public class Animal : MonoBehaviour
         goForFood = new GoForFood(this, movementSM);
         eatFood = new EatFood(this, movementSM);
 
+        curHunger = maxHunger;
+
+        //UI
+        hungerBar = GetComponentInChildren<HungerBar>();
+
         movementSM.Initialize(idle);
     }
 
     void Start()
     {
         agent.speed = normalSpeed;
+
+        //UI elements
+        hungerBar.SetMaxHunger(maxHunger);
     }
 
     void Update()
     {
+        //update SurvivalVariables
+        curHunger -= Time.deltaTime * gettingHungryRate;
+
+        //Update UI elements
+        hungerBar.SetHealth(curHunger);
+
         movementSM.CurrentState.HandleInput();
         movementSM.CurrentState.LogicUpdate();
     }
@@ -127,6 +149,12 @@ public class Animal : MonoBehaviour
     {
         Vector3 _position = new Vector3(transform.position.x, 0, transform.position.z);
         return Vector3.Distance(destination, _position) < tolerance;
+    }
+
+    public void Die()
+    {
+        Debug.Log("Died!!");
+        Destroy(this.gameObject);
     }
 
 }
