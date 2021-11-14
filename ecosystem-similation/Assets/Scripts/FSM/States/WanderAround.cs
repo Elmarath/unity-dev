@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class WanderAround : State
 {
-    private bool wander;
     private bool isArrived;
     private bool _isHungry;
     private float speed;
@@ -24,10 +23,8 @@ public class WanderAround : State
         // Set a destination
         _isHungry = animal.isHungry;
         speed = animal.normalSpeed;
-        destination = animal.CreateRandDestination(animal.wonderRadius);
+        destination = animal.CreateRandomDestination();
         animal.GotoDestination(destination);
-
-        wander = true;
 
     }
 
@@ -35,7 +32,6 @@ public class WanderAround : State
     {
         base.Exit();
         isArrived = false;
-        wander = false;
     }
     public override void HandleInput()
     {

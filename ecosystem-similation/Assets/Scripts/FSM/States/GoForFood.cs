@@ -8,6 +8,7 @@ public class GoForFood : State
     private bool isArrived;
     private Vector3 _foodLocation;
     private GameObject foundedFood;
+    private bool isFoodStartedToBeEaten;
 
     public GoForFood(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
     {
@@ -30,12 +31,18 @@ public class GoForFood : State
     public override void HandleInput()
     {
         isFoodStillAvalible = animal.foundedFood.GetComponent<Food>().isEatable;
+        isFoodStartedToBeEaten = animal.foundedFood.GetComponent<Food>().isStartedToBeEaten;
         isArrived = animal.IsCloseEnough(_foodLocation, 1f);
     }
 
     public override void LogicUpdate()
     {
-        if (!isFoodStillAvalible)
+        if (isFoodStartedToBeEaten)
+        {
+            stateMachine.ChangeState(animal.idle);
+        }
+
+        else if (!isFoodStillAvalible)
         {
             stateMachine.ChangeState(animal.idle);
         }

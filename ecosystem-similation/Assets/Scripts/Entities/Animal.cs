@@ -8,7 +8,13 @@ public class Animal : MonoBehaviour
     #region AnimalVeraiableAttributes
     public float normalSpeed = 5f;
     public float waitTime = 1f; // wait for next casual destination
-    public float wonderRadius = 15f; // wondering in a circle radius
+    [Range(1, 100)]
+    public float viewRadius = 10f;
+    [Range(0, 360)]
+    public float viewAngle = 100f;
+    [Range(1, 5)]
+    public float minSearchDistance = 2f;
+    public float maxHunder = 100f;
     #endregion
 
     #region 
@@ -53,6 +59,8 @@ public class Animal : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         fow = GetComponent<FieldOfView>();
+        fow.viewRadius = viewRadius;
+        fow.viewAngle = viewAngle;
         movementSM = new StateMachine();
         idle = new Idle(this, movementSM);
         wanderAround = new WanderAround(this, movementSM);
@@ -74,57 +82,40 @@ public class Animal : MonoBehaviour
         movementSM.CurrentState.LogicUpdate();
     }
 
-    public bool isDestinationInvalid(Vector3 destination)
+    public Vector3 CreateRandomDestination()
     {
-        NavMeshPath path = new NavMeshPath();
-        agent.CalculatePath(destination, path);
-
-        return (path.status == NavMeshPathStatus.PathPartial);
-    }
-
-    //Creates a random valid destination with given radius
-    public Vector3 CreateRandDestination(float radius)
-    {
+        Vector3 origin = transform.position;
+        Vector3 dirToTarget;
+        float distance = viewRadius;
+        int layermask = 1;
         Vector3 destination;
+        NavMeshHit navHit;
+        bool angleCheck;
+        bool distanceCheck;
+
+        int i = 0;
         do
         {
-            bool signMultiplier_0 = (Random.value < 0.5);
-            bool signMultiplier_1 = (Random.value < 0.5);
-            bool signMultiplier_2 = (Random.value < 0.5);
+            i++;
+            Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * distance;
+            randomDirection.y = 0;
+            randomDirection += origin;
 
-            float x = Random.Range(0, radius);
-            float z = Mathf.Pow(Mathf.Pow(radius, 2) - Mathf.Pow(x, 2), 0.5f);
+            NavMesh.SamplePosition(randomDirection, out navHit, distance, layermask);
+            destination = navHit.position;
 
-            if (signMultiplier_0)
-            {
-                float temp = x;
-                x = z;
-                z = temp;
-            }
+            dirToTarget = (destination - transform.position).normalized;
+            angleCheck = Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2;
+            distanceCheck = Vector3.Distance(destination, origin) > minSearchDistance; // min distance  
+        } while (!angleCheck && !distanceCheck && i < 30);
 
-
-            if (!signMultiplier_1)
-                x *= -1f;
-            if (!signMultiplier_2)
-                z *= -1f;
-
-
-
-            x /= Random.Range(1f, 5f);
-            z /= Random.Range(1f, 5f);
-
-
-            Vector3 _position = new Vector3(transform.position.x, 0, transform.position.y);
-            Vector3 unrelativeDestination = new Vector3(x, 0, z);
-
-            destination = _position + unrelativeDestination;
-
-        } while (isDestinationInvalid(destination));
-
-
+        if (i >= 30)
+        {
+            destination = transform.position - transform.forward * 5;
+        }
         return destination;
-
     }
+
     public void GotoDestination(Vector3 destination)
     {
         Vector3 dir = destination - transform.position;
@@ -137,4 +128,5 @@ public class Animal : MonoBehaviour
         Vector3 _position = new Vector3(transform.position.x, 0, transform.position.z);
         return Vector3.Distance(destination, _position) < tolerance;
     }
+
 }

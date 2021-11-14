@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Idle : State
 {
-    private bool isIdle;
     private bool isWaitTimeOver;
     private float _waitTime;
     private bool _isHungry;
@@ -21,14 +20,12 @@ public class Idle : State
         base.Enter();
         _waitTime = animal.waitTime;
 
-        isIdle = true;
         isWaitTimeOver = false;
     }
 
     public override void Exit()
     {
         base.Exit();
-        isIdle = false;
     }
     public override void HandleInput()
     {

@@ -19,6 +19,7 @@ public class Food : MonoBehaviour
     private Vector3 edibleScale;
 
     public bool isEatable = true;
+    public bool isStartedToBeEaten = false;
 
     void Awake()
     {
@@ -36,6 +37,7 @@ public class Food : MonoBehaviour
     {
         if (isEatable)
         {
+            isStartedToBeEaten = true;
             StartCoroutine(GetEatenCoroutine());
             return true;
         }
@@ -49,6 +51,7 @@ public class Food : MonoBehaviour
     {
         yield return new WaitForSeconds(getEatenTime);
         isEatable = false;
+        isStartedToBeEaten = false;
         this.transform.localScale = eatenScale;
         this._spriteRenderer.material.color = eatenColor;
         StartCoroutine("ReGrowCoroutine");

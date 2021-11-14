@@ -8,10 +8,10 @@ public class SearchForFood : State
     private Vector3 _foodLocation;
     private FieldOfView fow;
     private GameObject foundedFood;
-    private Food _foundFoodInst;
     private float _speed;
     private bool isArrived;
     private bool isFoodAvalible;
+    private bool isFoodStatedToBeEaten;
 
     public SearchForFood(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
     {
@@ -27,7 +27,7 @@ public class SearchForFood : State
         animal.fow.targetMask = animal.foodMask;
         animal.fow.StartCoroutine("FindTargetsWithDelay", .2f);
         _speed = animal.normalSpeed;
-        destination = animal.CreateRandDestination(animal.wonderRadius);
+        destination = animal.CreateRandomDestination();
         animal.GotoDestination(destination);
     }
 
@@ -42,9 +42,14 @@ public class SearchForFood : State
     {
         isArrived = animal.IsCloseEnough(destination, 1f);
         foundedFood = fow.returnedGameObject;
+
         if (foundedFood)
         {
             isFoodAvalible = foundedFood.GetComponent<Food>().isEatable;
+            if (isFoodAvalible)
+            {
+                isFoodStatedToBeEaten = foundedFood.GetComponent<Food>().isStartedToBeEaten;
+            }
         }
     }
 
@@ -52,7 +57,7 @@ public class SearchForFood : State
     {
         base.LogicUpdate();
 
-        if (foundedFood && isFoodAvalible)
+        if (foundedFood && isFoodAvalible && !isFoodStatedToBeEaten)
         {
             stateMachine.ChangeState(animal.goForFood);
         }

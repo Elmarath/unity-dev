@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class FieldOfView : MonoBehaviour
 {
+    [HideInInspector]
     public float viewRadius = 10;
-    [Range(0, 360)]
+    [HideInInspector]
     public float viewAngle = 120;
-
     [HideInInspector]
     public GameObject returnedGameObject;
     [HideInInspector]
@@ -16,12 +16,6 @@ public class FieldOfView : MonoBehaviour
     public LayerMask obstackeMask;
     [HideInInspector]
     public List<GameObject> visibleTargets = new List<GameObject>();
-
-    void Start()
-    {
-        returnedGameObject = null;
-        StartCoroutine("FindTargetsWithDelay", .2f);
-    }
 
     IEnumerator FindTargetsWithDelay(float delay)
     {
@@ -66,4 +60,5 @@ public class FieldOfView : MonoBehaviour
         }
         return new Vector3(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
     }
+
 }
