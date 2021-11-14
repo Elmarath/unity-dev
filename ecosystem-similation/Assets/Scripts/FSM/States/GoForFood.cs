@@ -7,6 +7,7 @@ public class GoForFood : State
     private bool isFoodStillAvalible;
     private bool isArrived;
     private Vector3 _foodLocation;
+    private GameObject foundedFood;
 
     public GoForFood(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
     {
@@ -14,7 +15,11 @@ public class GoForFood : State
 
     public override void Enter()
     {
+        Debug.Log("Going For Food!!");
+
         base.Enter();
+        foundedFood = animal.foundedFood;
+        _foodLocation = animal.foundedFood.transform.position;
         animal.GotoDestination(_foodLocation);
     }
 
@@ -24,9 +29,7 @@ public class GoForFood : State
     }
     public override void HandleInput()
     {
-        isFoodStillAvalible = animal.foundFood;
-        _foodLocation = animal.foodLocation;
-        animal.foodToBeEaten = animal.targetFood;
+        isFoodStillAvalible = animal.foundedFood.GetComponent<Food>().isEatable;
         isArrived = animal.IsCloseEnough(_foodLocation, 1f);
     }
 

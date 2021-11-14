@@ -5,24 +5,43 @@ using UnityEngine.AI;
 
 public class Animal : MonoBehaviour
 {
-    #region StateVeriables
-    public StateMachine movementSM;
-    public Idle idle;
-    public SearchForFood searchForFood;
-    public GoForFood goForFood;
-    public WanderAround wanderAround;
-    public EatFood eatFood;
-    #endregion
-
     #region AnimalVeraiableAttributes
     public float normalSpeed = 5f;
     public float waitTime = 1f; // wait for next casual destination
     public float wonderRadius = 15f; // wondering in a circle radius
-    public Vector3 foodLocation;
-    public bool foundFood;
+    #endregion
+
+    #region 
+    public LayerMask foodMask;
+    public LayerMask obstacleMask;
+    #endregion
+
+    #region StateVeriables
+    [HideInInspector]
+    public StateMachine movementSM;
+    [HideInInspector]
+    public Idle idle;
+    public SearchForFood searchForFood;
+    [HideInInspector]
+    public GoForFood goForFood;
+    [HideInInspector]
+    public WanderAround wanderAround;
+    [HideInInspector]
+    public EatFood eatFood;
+    #endregion
+
+    #region StateChangeVeriables
+    [HideInInspector]
     public bool isHungry = false;
-    public GameObject targetFood;
-    public GameObject foodToBeEaten;
+    [HideInInspector]
+    public GameObject foundedFood;
+    #endregion
+
+    #region FieldOfView
+    [HideInInspector]
+    public FieldOfView fow;
+    [HideInInspector]
+    public GameObject foundTarget;
     #endregion
 
     #region Attachments
@@ -33,7 +52,7 @@ public class Animal : MonoBehaviour
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-
+        fow = GetComponent<FieldOfView>();
         movementSM = new StateMachine();
         idle = new Idle(this, movementSM);
         wanderAround = new WanderAround(this, movementSM);
@@ -118,23 +137,4 @@ public class Animal : MonoBehaviour
         Vector3 _position = new Vector3(transform.position.x, 0, transform.position.z);
         return Vector3.Distance(destination, _position) < tolerance;
     }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.CompareTag("Food"))
-        {
-            targetFood = other.gameObject;
-            foodLocation = other.transform.position;
-            foundFood = true;
-        }
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Food"))
-        {
-            foundFood = false;
-            foodToBeEaten = null;
-        }
-    }
-
 }

@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class EatFood : State
 {
-    private GameObject _foodToBeEaten;
-
-    private Vector3 foodLocaction;
     private bool isFoodFinished;
+    private GameObject foundFood;
     private Food _foodToBeEatenRef;
+    private Vector3 foodLocation;
+
+    private bool exitState;
 
     public EatFood(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
     {
@@ -16,10 +17,10 @@ public class EatFood : State
 
     public override void Enter()
     {
+        Debug.Log("Eating food!!");
+
         base.Enter();
-        _foodToBeEaten = animal.foodToBeEaten;
-        _foodToBeEatenRef = animal.foodToBeEaten.GetComponent<Food>();
-        foodLocaction = _foodToBeEaten.transform.position;
+        _foodToBeEatenRef = animal.foundedFood.GetComponent<Food>();
         _foodToBeEatenRef.GetEaten();
         Debug.Log("Started eating Food");
     }
@@ -30,12 +31,21 @@ public class EatFood : State
     }
     public override void HandleInput()
     {
+        if (!animal.foundedFood)
+        {
+            exitState = true;
+        }
         isFoodFinished = !_foodToBeEatenRef.isEatable;
     }
 
     public override void LogicUpdate()
     {
         if (isFoodFinished)
+        {
+            stateMachine.ChangeState(animal.idle);
+        }
+
+        if (exitState)
         {
             stateMachine.ChangeState(animal.idle);
         }

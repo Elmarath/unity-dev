@@ -51,6 +51,7 @@ public class Food : MonoBehaviour
         isEatable = false;
         this.transform.localScale = eatenScale;
         this._spriteRenderer.material.color = eatenColor;
+        StartCoroutine("ReGrowCoroutine");
     }
 
     IEnumerator ReGrowCoroutine()

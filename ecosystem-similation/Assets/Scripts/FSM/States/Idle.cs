@@ -16,6 +16,8 @@ public class Idle : State
 
     public override void Enter()
     {
+        Debug.Log("Idle");
+
         base.Enter();
         _waitTime = animal.waitTime;
 
