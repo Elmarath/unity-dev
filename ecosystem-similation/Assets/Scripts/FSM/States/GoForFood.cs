@@ -30,7 +30,7 @@ public class GoForFood : State
     {
         isFoodStillAvalible = animal.foundedFood.GetComponent<Food>().isEatable;
         isFoodStartedToBeEaten = animal.foundedFood.GetComponent<Food>().isStartedToBeEaten;
-        isArrived = animal.IsCloseEnough(_foodLocation, 1f);
+        isArrived = animal.IsCloseEnough(_foodLocation, 2f);
     }
 
     public override void LogicUpdate()
