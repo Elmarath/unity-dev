@@ -1,0 +1,13 @@
+#mesh_block.obj
+#Monday, November 15, 2021
+#5:28:17 PM
+#-------
+
+#mesh_block
+#-------
+g mesh_block
+
+
+
+usemtl grass
+usemap grass
