@@ -8,20 +8,20 @@ public class Animal : MonoBehaviour
     #region AnimalVeraiableAttributes
     public float normalSpeed = 5f;
     public float waitTime = 1f; // wait for next casual destination
-    [Range(1, 100)]
-    public float viewRadius = 10f;
-    [Range(0, 360)]
-    public float viewAngle = 100f;
     [Range(1, 5)]
     public float minSearchDistance = 2f;
     public float maxHunger = 100f;
+    public float maxThirst = 100f;
     [Range(0.25f, 10)]
     public float gettingHungryRate = 2f; // deletes x point per sec
     public float gettingFullMultiplier = 30f;
+    public float gettingThirstyRate = 3.5f;
+    public float drinkingRate = 30f;
     #endregion
 
     #region 
     public LayerMask foodMask;
+    public LayerMask waterMask;
     public LayerMask obstacleMask;
     #endregion
 
@@ -43,10 +43,16 @@ public class Animal : MonoBehaviour
     [HideInInspector]
     public bool isHungry = false;
     [HideInInspector]
+    public bool isThirsty = false;
+    [HideInInspector]
     public GameObject foundedFood;
     #endregion
 
     #region FieldOfView
+    [HideInInspector]
+    public float viewRadius;
+    [HideInInspector]
+    public float viewAngle;
     [HideInInspector]
     public FieldOfView fow;
     [HideInInspector]
@@ -56,19 +62,22 @@ public class Animal : MonoBehaviour
     #region Attachments
     private NavMeshAgent agent;
     private HungerBar hungerBar;
+    private ThirstBar thirstBar;
     public GameObject indicator;
     #endregion
 
     #region animalSurvivalVariables
     public float curHunger;
+    public float curThirst;
     #endregion 
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         fow = GetComponent<FieldOfView>();
-        fow.viewRadius = viewRadius;
-        fow.viewAngle = viewAngle;
+
+        viewRadius = fow.viewRadius;
+        viewAngle = fow.viewAngle;
         movementSM = new StateMachine();
         idle = new Idle(this, movementSM);
         wanderAround = new WanderAround(this, movementSM);
@@ -77,9 +86,10 @@ public class Animal : MonoBehaviour
         eatFood = new EatFood(this, movementSM);
 
         curHunger = maxHunger;
-
+        curThirst = maxThirst;
         //UI
         hungerBar = GetComponentInChildren<HungerBar>();
+        thirstBar = GetComponentInChildren<ThirstBar>();
 
         movementSM.Initialize(idle);
     }
@@ -90,15 +100,18 @@ public class Animal : MonoBehaviour
 
         //UI elements
         hungerBar.SetMaxHunger(maxHunger);
+        thirstBar.SetMaxThirst(maxThirst);
     }
 
     void Update()
     {
         //update SurvivalVariables
         curHunger -= Time.deltaTime * gettingHungryRate;
+        curThirst -= Time.deltaTime * gettingThirstyRate;
 
         //Update UI elements
-        hungerBar.SetHealth(curHunger);
+        hungerBar.SetThirst(curHunger);
+        thirstBar.SetThirst(curThirst);
 
         movementSM.CurrentState.HandleInput();
         movementSM.CurrentState.LogicUpdate();

@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class FieldOfView : MonoBehaviour
 {
-    [HideInInspector]
     public float viewRadius = 10;
-    [HideInInspector]
     public float viewAngle = 120;
     [HideInInspector]
     public GameObject returnedGameObject;

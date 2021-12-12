@@ -4,10 +4,11 @@ using UnityEngine.UI;
 public class HungerBar : MonoBehaviour
 {
     private Slider slider;
+    private Transform hungerBar;
 
     private void Awake()
     {
-        slider = GetComponentInChildren<Slider>();
+        slider = transform.GetChild(1).GetChild(0).GetComponent<Slider>();
     }
 
     public void SetMaxHunger(float maxHunger)
@@ -17,7 +18,7 @@ public class HungerBar : MonoBehaviour
         slider.value = maxHunger;
     }
 
-    public void SetHealth(float hunger)
+    public void SetThirst(float hunger)
     {
         slider.value = hunger;
     }
