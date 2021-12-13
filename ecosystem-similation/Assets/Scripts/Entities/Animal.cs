@@ -19,7 +19,7 @@ public class Animal : MonoBehaviour
     public float drinkingRate = 30f;
     #endregion
 
-    #region 
+    #region Layers
     public LayerMask foodMask;
     public LayerMask waterMask;
     public LayerMask obstacleMask;
@@ -30,13 +30,19 @@ public class Animal : MonoBehaviour
     public StateMachine movementSM;
     [HideInInspector]
     public Idle idle;
+    [HideInInspector]
     public SearchForFood searchForFood;
     [HideInInspector]
+    public SearchForWater searchForWater;
+    [HideInInspector]
     public GoForFood goForFood;
+    [HideInInspector]
+    public GoForWater goForWater;
     [HideInInspector]
     public WanderAround wanderAround;
     [HideInInspector]
     public EatFood eatFood;
+    public DrinkWater drinkWater;
     #endregion
 
     #region StateChangeVeriables
@@ -46,6 +52,8 @@ public class Animal : MonoBehaviour
     public bool isThirsty = false;
     [HideInInspector]
     public GameObject foundedFood;
+    [HideInInspector]
+    public GameObject foundedWater;
     #endregion
 
     #region FieldOfView
@@ -82,8 +90,11 @@ public class Animal : MonoBehaviour
         idle = new Idle(this, movementSM);
         wanderAround = new WanderAround(this, movementSM);
         searchForFood = new SearchForFood(this, movementSM);
+        searchForWater = new SearchForWater(this, movementSM);
         goForFood = new GoForFood(this, movementSM);
+        goForWater = new GoForWater(this, movementSM);
         eatFood = new EatFood(this, movementSM);
+        drinkWater = new DrinkWater(this, movementSM);
 
         curHunger = maxHunger;
         curThirst = maxThirst;
@@ -169,5 +180,4 @@ public class Animal : MonoBehaviour
         Debug.Log("Died!!");
         Destroy(this.gameObject);
     }
-
 }

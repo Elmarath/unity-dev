@@ -20,10 +20,9 @@ public class SearchForFood : State
 
     public override void Enter()
     {
-        Debug.Log("Searching for food!!");
-
         base.Enter();
         fow = animal.fow;
+        fow.StopAllCoroutines();
         animal.fow.targetMask = animal.foodMask;
         animal.fow.StartCoroutine("FindTargetsWithDelay", .2f);
         _speed = animal.normalSpeed;
@@ -42,7 +41,6 @@ public class SearchForFood : State
     {
         isArrived = animal.IsCloseEnough(destination, 1f);
         foundedFood = fow.returnedGameObject;
-
         if (foundedFood)
         {
             isFoodAvalible = foundedFood.GetComponent<Food>().isEatable;

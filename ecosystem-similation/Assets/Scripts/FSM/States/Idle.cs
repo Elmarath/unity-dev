@@ -7,6 +7,7 @@ public class Idle : State
     private bool isWaitTimeOver;
     private float _waitTime;
     private bool _isHungry;
+    private bool _isThirsty;
     private bool readyToDie;
 
     public Idle(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
@@ -38,7 +39,8 @@ public class Idle : State
         animal.isHungry = (animal.curHunger < 70);
         _isHungry = animal.isHungry;
         // TODO: if thirsty exit
-
+        animal.isThirsty = (animal.curThirst < 70);
+        _isThirsty = animal.isThirsty;
         // TODO: if horny exit
 
         // after curtain time exit
@@ -64,7 +66,12 @@ public class Idle : State
             animal.Die();
         }
 
-        if (isWaitTimeOver && _isHungry)
+        if (isWaitTimeOver && _isThirsty && animal.curThirst < animal.curHunger)
+        {
+            stateMachine.ChangeState(animal.searchForWater);    
+        }
+
+        else if (isWaitTimeOver && _isHungry && animal.curHunger < animal.curThirst) 
         {
             stateMachine.ChangeState(animal.searchForFood);
         }

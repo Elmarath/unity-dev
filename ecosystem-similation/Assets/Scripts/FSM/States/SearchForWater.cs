@@ -21,7 +21,9 @@ public class SearchForWater : State
     public override void Enter()
     {
         base.Enter();
+        Debug.Log("Entered Search For water state");
         fow = animal.fow;
+        fow.StopAllCoroutines();
         animal.fow.targetMask = animal.waterMask;
         animal.fow.StartCoroutine("FindTargetsWithDelay", .2f);
         _speed = animal.normalSpeed;
@@ -33,7 +35,7 @@ public class SearchForWater : State
     {
         base.Exit();
         animal.fow.StopCoroutine("FindTargetsWithDelay");
-        animal.foundedFood = foundedWater;
+        animal.foundedWater = foundedWater;
         isArrived = false;
     }
     public override void HandleInput()
@@ -46,9 +48,9 @@ public class SearchForWater : State
     {
         base.LogicUpdate();
 
-        if (foundedWater && isFoodAvalible && !isFoodStatedToBeEaten)
+        if (foundedWater)
         {
-            stateMachine.ChangeState(animal.goForFood);
+            stateMachine.ChangeState(animal.goForWater);
         }
 
         if (isArrived)
