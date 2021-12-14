@@ -14,10 +14,6 @@ public class GoForMate : State
     public override void Enter()
     {
         base.Enter();
-        _waterLocation = animal.foundedWater.transform.position;
-        // making a distance between animal and the water
-        _waterLocation -= ((_waterLocation - animal.transform.position).normalized) * 2f;
-        animal.GotoDestination(_waterLocation);
     }
 
     public override void Exit()
@@ -26,15 +22,10 @@ public class GoForMate : State
     }
     public override void HandleInput()
     {
-        isArrived = animal.IsCloseEnough(_waterLocation, 1f);
     }
 
     public override void LogicUpdate()
     {
-        if (isArrived)
-        {
-            stateMachine.ChangeState(animal.drinkWater);
-        }
     }
 
 }
