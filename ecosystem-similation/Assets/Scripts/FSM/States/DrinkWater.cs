@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class DrinkWater : State
 {
-
-    private float drinkingRate;
-    private bool exitState;
     private bool isFull;
+    private GameObject waterFound;
+
+    private bool exitState;
+
     public DrinkWater(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
     {
     }
@@ -15,8 +16,6 @@ public class DrinkWater : State
     public override void Enter()
     {
         base.Enter();
-        Debug.Log("Drinking the Water");
-        drinkingRate = animal.drinkingRate;
     }
 
     public override void Exit()
@@ -25,20 +24,27 @@ public class DrinkWater : State
     }
     public override void HandleInput()
     {
-        if((animal.curThirst - 2f) >= animal.maxThirst){
-            isFull = true;
-        } 
-        else
+        if (!animal.foundedWater)
         {
-            isFull = false;
+            exitState = true;
+        }
+        isFull = ((animal.maxThirst - 0.5f) <= animal.curThirst);
+
+        if (!isFull)
+        {
+            animal.curThirst += Time.deltaTime * animal.drinkingRate;
         }
     }
 
     public override void LogicUpdate()
     {
-        animal.curThirst += Time.deltaTime * animal.drinkingRate;
+        if (isFull)
+        {
+            stateMachine.ChangeState(animal.idle);
+        }
 
-        if(isFull){
+        if (exitState)
+        {
             stateMachine.ChangeState(animal.idle);
         }
     }

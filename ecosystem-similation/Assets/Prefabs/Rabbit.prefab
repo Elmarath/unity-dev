@@ -753,11 +753,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7405193051865470689}
+  - component: {fileID: 7405193051865470691}
   - component: {fileID: 926722963}
   - component: {fileID: 2119471370}
   - component: {fileID: 1814175121}
   - component: {fileID: 7286946561188058439}
-  - component: {fileID: 7405193051865470691}
   m_Layer: 6
   m_Name: Rabbit
   m_TagString: Rabbit
@@ -781,6 +781,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!195 &7405193051865470691
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7405193051865470686}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!114 &926722963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -798,9 +820,9 @@ MonoBehaviour:
   minSearchDistance: 2
   maxHunger: 100
   maxThirst: 100
-  gettingHungryRate: 0.5
+  gettingHungryRate: 1
+  gettingThirstyRate: 2.5
   gettingFullMultiplier: 30
-  gettingThirstyRate: 3.5
   drinkingRate: 30
   foodMask:
     serializedVersion: 2
@@ -868,28 +890,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aab3459822de64fa0b6aa23021455b11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!195 &7405193051865470691
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7405193051865470686}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!1 &7405193052924247929
 GameObject:
   m_ObjectHideFlags: 0

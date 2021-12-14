@@ -11,12 +11,13 @@ public class FieldOfView : MonoBehaviour
     [HideInInspector]
     public LayerMask targetMask;
     [HideInInspector]
-    public LayerMask obstacleMask;
+    public LayerMask obstackeMask;
     [HideInInspector]
     public List<GameObject> visibleTargets = new List<GameObject>();
 
     IEnumerator FindTargetsWithDelay(float delay)
     {
+        returnedGameObject = null;
         while (true)
         {
             yield return new WaitForSeconds(delay);
@@ -26,7 +27,6 @@ public class FieldOfView : MonoBehaviour
 
     GameObject FindVisibleTargets()
     {
-        Debug.Log(targetMask.value);
         visibleTargets.Clear();
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
 
@@ -38,7 +38,7 @@ public class FieldOfView : MonoBehaviour
             if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
             {
                 float dstToTarget = Vector3.Distance(transform.position, targetTransform.position);
-                if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
+                if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstackeMask))
                 {
                     visibleTargets.Add(targetObject);
                     returnedGameObject = targetObject;

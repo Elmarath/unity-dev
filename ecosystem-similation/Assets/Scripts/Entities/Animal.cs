@@ -14,12 +14,13 @@ public class Animal : MonoBehaviour
     public float maxThirst = 100f;
     [Range(0.25f, 10)]
     public float gettingHungryRate = 2f; // deletes x point per sec
-    public float gettingFullMultiplier = 30f;
+    [Range(0.25f, 10)]
     public float gettingThirstyRate = 3.5f;
+    public float gettingFullMultiplier = 30f;
     public float drinkingRate = 30f;
     #endregion
 
-    #region Layers
+    #region 
     public LayerMask foodMask;
     public LayerMask waterMask;
     public LayerMask obstacleMask;
@@ -42,6 +43,7 @@ public class Animal : MonoBehaviour
     public WanderAround wanderAround;
     [HideInInspector]
     public EatFood eatFood;
+    [HideInInspector]
     public DrinkWater drinkWater;
     #endregion
 
@@ -177,7 +179,7 @@ public class Animal : MonoBehaviour
 
     public void Die()
     {
-        Debug.Log("Died!!");
         Destroy(this.gameObject);
     }
+
 }

@@ -8,7 +8,6 @@ public class SearchForFood : State
     private Vector3 _foodLocation;
     private FieldOfView fow;
     private GameObject foundedFood;
-    private float _speed;
     private bool isArrived;
     private bool isFoodAvalible;
     private bool isFoodStatedToBeEaten;
@@ -25,7 +24,6 @@ public class SearchForFood : State
         fow.StopAllCoroutines();
         animal.fow.targetMask = animal.foodMask;
         animal.fow.StartCoroutine("FindTargetsWithDelay", .2f);
-        _speed = animal.normalSpeed;
         destination = animal.CreateRandomDestination();
         animal.GotoDestination(destination);
     }
@@ -33,7 +31,6 @@ public class SearchForFood : State
     public override void Exit()
     {
         base.Exit();
-        animal.fow.StopCoroutine("FindTargetsWithDelay");
         animal.foundedFood = foundedFood;
         isArrived = false;
     }
@@ -41,9 +38,13 @@ public class SearchForFood : State
     {
         isArrived = animal.IsCloseEnough(destination, 1f);
         foundedFood = fow.returnedGameObject;
+
         if (foundedFood)
         {
+            Debug.Log(foundedFood.name);
+
             isFoodAvalible = foundedFood.GetComponent<Food>().isEatable;
+
             if (isFoodAvalible)
             {
                 isFoodStatedToBeEaten = foundedFood.GetComponent<Food>().isStartedToBeEaten;

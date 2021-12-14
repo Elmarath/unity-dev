@@ -7,6 +7,7 @@ public class EatFood : State
     private bool isFoodFinished;
     private GameObject foundFood;
     private Food _foodToBeEatenRef;
+    private Vector3 foodLocation;
 
     private bool exitState;
 
@@ -38,8 +39,8 @@ public class EatFood : State
     {
         if (isFoodFinished)
         {
-            stateMachine.ChangeState(animal.idle);
             animal.curHunger += animal.gettingFullMultiplier;
+            stateMachine.ChangeState(animal.idle);
         }
 
         if (exitState)

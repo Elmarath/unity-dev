@@ -6,7 +6,6 @@ public class GoForWater : State
 {
     private bool isArrived;
     private Vector3 _waterLocation;
-    private GameObject foundedWater;
 
     public GoForWater(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
     {
@@ -15,11 +14,9 @@ public class GoForWater : State
     public override void Enter()
     {
         base.Enter();
-        Debug.Log("In GoForWaterState");
-        foundedWater = animal.foundedWater;
         _waterLocation = animal.foundedWater.transform.position;
-        //stoping at desired distance
-        _waterLocation = _waterLocation + (animal.transform.position - _waterLocation).normalized * 2f;
+        // making a distance between animal and the water
+        _waterLocation -= ((_waterLocation - animal.transform.position).normalized) * 2f;
         animal.GotoDestination(_waterLocation);
     }
 
@@ -29,12 +26,13 @@ public class GoForWater : State
     }
     public override void HandleInput()
     {
-        isArrived = animal.IsCloseEnough(_waterLocation, 2f);
+        isArrived = animal.IsCloseEnough(_waterLocation, 1f);
     }
 
     public override void LogicUpdate()
     {
-        if(isArrived){
+        if (isArrived)
+        {
             stateMachine.ChangeState(animal.drinkWater);
         }
     }
