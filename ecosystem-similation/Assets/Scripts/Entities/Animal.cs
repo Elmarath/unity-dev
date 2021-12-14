@@ -44,6 +44,8 @@ public class Animal : MonoBehaviour
     [HideInInspector]
     public GoForWater goForWater;
     [HideInInspector]
+    public GoForMate goForMate;
+    [HideInInspector]
     public WanderAround wanderAround;
     [HideInInspector]
     public EatFood eatFood;
@@ -97,7 +99,7 @@ public class Animal : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         fow = GetComponent<FieldOfView>();
-
+        fow.selfRef = gameObject;
         viewRadius = fow.viewRadius;
         viewAngle = fow.viewAngle;
         movementSM = new StateMachine();
@@ -108,6 +110,7 @@ public class Animal : MonoBehaviour
         searchForMate = new SearchForMate(this, movementSM);
         goForFood = new GoForFood(this, movementSM);
         goForWater = new GoForWater(this, movementSM);
+        goForMate = new GoForMate(this, movementSM);
         eatFood = new EatFood(this, movementSM);
         drinkWater = new DrinkWater(this, movementSM);
 

@@ -8,7 +8,7 @@ public class ThirstBar : MonoBehaviour
 
     private void Awake()
     {
-        slider = transform.GetChild(1).GetChild(1).GetComponent<Slider>();
+        slider = transform.GetChild(0).GetChild(1).GetComponent<Slider>();
     }
 
     public void SetMaxThirst(float maxThirst)

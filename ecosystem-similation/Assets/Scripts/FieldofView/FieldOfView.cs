@@ -9,6 +9,8 @@ public class FieldOfView : MonoBehaviour
     [HideInInspector]
     public GameObject returnedGameObject;
     [HideInInspector]
+    public GameObject selfRef;
+    [HideInInspector]
     public LayerMask targetMask;
     [HideInInspector]
     public LayerMask obstackeMask;
@@ -41,8 +43,16 @@ public class FieldOfView : MonoBehaviour
                 if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstackeMask))
                 {
                     visibleTargets.Add(targetObject);
-                    returnedGameObject = targetObject;
-                    return targetObject;
+                    returnedGameObject = visibleTargets[visibleTargets.Count - 1];
+                    if (!(visibleTargets[visibleTargets.Count - 1] == selfRef))
+                    {
+                        Debug.Log("returned gameobject " + returnedGameObject);
+                        Debug.Log("Self Ref " + selfRef);
+                        return returnedGameObject;
+                    }
+                    visibleTargets.Remove(selfRef);
+                    returnedGameObject = null;
+                    return null;
                 }
             }
         }

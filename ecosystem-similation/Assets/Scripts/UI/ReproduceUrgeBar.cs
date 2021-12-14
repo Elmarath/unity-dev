@@ -8,7 +8,7 @@ public class ReproduceUrgeBar : MonoBehaviour
 
     private void Awake()
     {
-        slider = transform.GetChild(1).GetChild(2).GetComponent<Slider>();
+        slider = transform.GetChild(0).GetChild(2).GetComponent<Slider>();
     }
 
     public void SetMaxReproduceUrge(float maxReproduceUrge)

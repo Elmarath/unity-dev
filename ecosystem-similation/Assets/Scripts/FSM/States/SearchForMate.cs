@@ -45,7 +45,7 @@ public class SearchForMate : State
         if (foundedMate)
         {
             Debug.Log("Going for mate!");
-            Debug.Log(foundedMate.name);
+            Debug.Log(foundedMate.transform.position);
             //stateMachine.ChangeState(animal.goForMate);
         }
 

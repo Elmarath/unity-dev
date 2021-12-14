@@ -8,7 +8,7 @@ public class HungerBar : MonoBehaviour
 
     private void Awake()
     {
-        slider = transform.GetChild(1).GetChild(0).GetComponent<Slider>();
+        slider = transform.GetChild(0).GetChild(0).GetComponent<Slider>();
     }
 
     public void SetMaxHunger(float maxHunger)
