@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SearchForWater : State
+public class SearchForMate : State
 {
     private Vector3 destination;
     private FieldOfView fow;
-    private GameObject foundedWater;
+    private GameObject foundedMate;
     private bool isArrived;
 
-    public SearchForWater(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
+    public SearchForMate(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
     {
 
     }
@@ -20,7 +20,7 @@ public class SearchForWater : State
 
         fow = animal.fow;
         fow.StopAllCoroutines();
-        animal.fow.targetMask = animal.waterMask;
+        animal.fow.targetMask = animal.rabbitMask;
         animal.fow.StartCoroutine("FindTargetsWithDelay", .2f);
         destination = animal.CreateRandomDestination();
         animal.GotoDestination(destination);
@@ -29,22 +29,24 @@ public class SearchForWater : State
     public override void Exit()
     {
         base.Exit();
-        animal.foundedWater = foundedWater;
+        animal.foundedMate = foundedMate;
         isArrived = false;
     }
     public override void HandleInput()
     {
         isArrived = animal.IsCloseEnough(destination, 1f);
-        foundedWater = fow.returnedGameObject;
+        foundedMate = fow.returnedGameObject;
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
 
-        if (foundedWater)
+        if (foundedMate)
         {
-            stateMachine.ChangeState(animal.goForWater);
+            Debug.Log("Going for mate!");
+            Debug.Log(foundedMate.name);
+            //stateMachine.ChangeState(animal.goForMate);
         }
 
         if (isArrived)

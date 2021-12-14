@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class ThirstBar : MonoBehaviour
 {
     private Slider slider;
+    private float _maxThirst;
 
     private void Awake()
     {
@@ -12,12 +13,13 @@ public class ThirstBar : MonoBehaviour
 
     public void SetMaxThirst(float maxThirst)
     {
+        _maxThirst = maxThirst;
         slider.maxValue = maxThirst;
-        slider.value = maxThirst;
+        slider.value = 0;
     }
 
     public void SetThirst(float thirst)
     {
-        slider.value = thirst;
+        slider.value = _maxThirst - thirst;
     }
 }

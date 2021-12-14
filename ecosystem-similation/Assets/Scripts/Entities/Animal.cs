@@ -12,10 +12,13 @@ public class Animal : MonoBehaviour
     public float minSearchDistance = 2f;
     public float maxHunger = 100f;
     public float maxThirst = 100f;
+    public float maxReproduceUrge = 100f;
     [Range(0.25f, 10)]
     public float gettingHungryRate = 2f; // deletes x point per sec
     [Range(0.25f, 10)]
     public float gettingThirstyRate = 3.5f;
+    [Range(0.25f, 10)]
+    public float gettingHornyRate = 0.75f;
     public float gettingFullMultiplier = 30f;
     public float drinkingRate = 30f;
     #endregion
@@ -23,6 +26,7 @@ public class Animal : MonoBehaviour
     #region 
     public LayerMask foodMask;
     public LayerMask waterMask;
+    public LayerMask rabbitMask;
     public LayerMask obstacleMask;
     #endregion
 
@@ -45,6 +49,8 @@ public class Animal : MonoBehaviour
     public EatFood eatFood;
     [HideInInspector]
     public DrinkWater drinkWater;
+    [HideInInspector]
+    public SearchForMate searchForMate;
     #endregion
 
     #region StateChangeVeriables
@@ -53,9 +59,13 @@ public class Animal : MonoBehaviour
     [HideInInspector]
     public bool isThirsty = false;
     [HideInInspector]
+    public bool isHorny = false;
+    [HideInInspector]
     public GameObject foundedFood;
     [HideInInspector]
     public GameObject foundedWater;
+    [HideInInspector]
+    public GameObject foundedMate;
     #endregion
 
     #region FieldOfView
@@ -73,12 +83,14 @@ public class Animal : MonoBehaviour
     private NavMeshAgent agent;
     private HungerBar hungerBar;
     private ThirstBar thirstBar;
+    private ReproduceUrgeBar reproduceUrgeBar;
     public GameObject indicator;
     #endregion
 
     #region animalSurvivalVariables
     public float curHunger;
     public float curThirst;
+    public float curHorny;
     #endregion 
 
     private void Awake()
@@ -93,6 +105,7 @@ public class Animal : MonoBehaviour
         wanderAround = new WanderAround(this, movementSM);
         searchForFood = new SearchForFood(this, movementSM);
         searchForWater = new SearchForWater(this, movementSM);
+        searchForMate = new SearchForMate(this, movementSM);
         goForFood = new GoForFood(this, movementSM);
         goForWater = new GoForWater(this, movementSM);
         eatFood = new EatFood(this, movementSM);
@@ -100,9 +113,12 @@ public class Animal : MonoBehaviour
 
         curHunger = maxHunger;
         curThirst = maxThirst;
+        curHorny = maxReproduceUrge;
+
         //UI
         hungerBar = GetComponentInChildren<HungerBar>();
         thirstBar = GetComponentInChildren<ThirstBar>();
+        reproduceUrgeBar = GetComponentInChildren<ReproduceUrgeBar>();
 
         movementSM.Initialize(idle);
     }
@@ -114,6 +130,7 @@ public class Animal : MonoBehaviour
         //UI elements
         hungerBar.SetMaxHunger(maxHunger);
         thirstBar.SetMaxThirst(maxThirst);
+        reproduceUrgeBar.SetMaxReproduceUrge(maxReproduceUrge);
     }
 
     void Update()
@@ -121,10 +138,12 @@ public class Animal : MonoBehaviour
         //update SurvivalVariables
         curHunger -= Time.deltaTime * gettingHungryRate;
         curThirst -= Time.deltaTime * gettingThirstyRate;
+        curHorny -= Time.deltaTime * gettingHornyRate;
 
         //Update UI elements
         hungerBar.SetThirst(curHunger);
         thirstBar.SetThirst(curThirst);
+        reproduceUrgeBar.SetReproduceUrge(curHorny);
 
         movementSM.CurrentState.HandleInput();
         movementSM.CurrentState.LogicUpdate();

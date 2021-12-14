@@ -6,7 +6,6 @@ public class Idle : State
 {
     private bool isWaitTimeOver;
     private float _waitTime;
-    private bool _isHungry;
     private bool readyToDie;
 
     public Idle(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
@@ -39,7 +38,7 @@ public class Idle : State
         // TODO: if thirsty exit
         animal.isThirsty = (animal.curThirst < 70);
         // TODO: if horny exit
-
+        animal.isHorny = (animal.curHorny < 70);
         // after curtain time exit
 
 
@@ -63,16 +62,21 @@ public class Idle : State
             animal.Die();
         }
 
-        else if (isWaitTimeOver && (animal.isHungry || animal.isThirsty))
+        else if (isWaitTimeOver && (animal.isHungry || animal.isThirsty || animal.isHorny))
         {
-            if (animal.isHungry && (animal.curHunger <= animal.curThirst))
+            if (animal.isHungry && (animal.curHunger <= animal.curThirst) && (animal.curHunger <= animal.curHorny))
             {
                 stateMachine.ChangeState(animal.searchForFood);
             }
-            else if (animal.isThirsty && (animal.curThirst < animal.curHunger))
+            else if (animal.isThirsty && (animal.curThirst < animal.curHunger) && (animal.curThirst < animal.curHorny))
             {
                 stateMachine.ChangeState(animal.searchForWater);
             }
+            else if (animal.isHorny && (animal.curHorny < animal.curHunger) && (animal.curHorny < animal.curThirst))
+            {
+                stateMachine.ChangeState(animal.searchForMate);
+            }
+
             else
             {
                 Debug.LogError("Logic Error");

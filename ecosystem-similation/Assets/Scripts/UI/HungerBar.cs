@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class HungerBar : MonoBehaviour
 {
     private Slider slider;
-    private Transform hungerBar;
+    private float _maxHunger;
 
     private void Awake()
     {
@@ -13,13 +13,13 @@ public class HungerBar : MonoBehaviour
 
     public void SetMaxHunger(float maxHunger)
     {
-
+        _maxHunger = maxHunger;
         slider.maxValue = maxHunger;
-        slider.value = maxHunger;
+        slider.value = 0;
     }
 
     public void SetThirst(float hunger)
     {
-        slider.value = hunger;
+        slider.value = _maxHunger - hunger;
     }
 }
