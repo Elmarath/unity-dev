@@ -23,7 +23,7 @@ public class Animal : MonoBehaviour
     public float drinkingRate = 30f;
     #endregion
 
-    #region 
+    #region LayerMasks
     public LayerMask foodMask;
     public LayerMask waterMask;
     public LayerMask rabbitMask;
@@ -62,6 +62,8 @@ public class Animal : MonoBehaviour
     public bool isThirsty = false;
     [HideInInspector]
     public bool isHorny = false;
+    [HideInInspector]
+    public bool goIdle;
     [HideInInspector]
     public GameObject foundedFood;
     [HideInInspector]
@@ -151,9 +153,6 @@ public class Animal : MonoBehaviour
         // update states
         movementSM.CurrentState.HandleInput();
         movementSM.CurrentState.LogicUpdate();
-
-        // test
-        CreateRandomValidPoint(transform.position, 2f);
     }
 
     public Vector3 CreateRandomDestination()
@@ -161,27 +160,29 @@ public class Animal : MonoBehaviour
         Vector3 origin = transform.position;
         Vector3 dirToTarget;
         float distance = viewRadius;
-        int layermask = 1;
         Vector3 destination;
-        NavMeshHit navHit;
+        NavMeshPath path = new NavMeshPath();
         bool angleCheck;
         bool distanceCheck;
+        bool isValid;
 
         int i = 0;
         do
         {
             i++;
-            Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * distance;
-            randomDirection.y = 0;
-            randomDirection += origin;
+            destination = UnityEngine.Random.insideUnitSphere * distance;
+            destination.y = 0;
+            destination += origin;
             // check if destination valid
-            NavMesh.SamplePosition(randomDirection, out navHit, distance, layermask);
-            destination = navHit.position;
+            isValid = agent.CalculatePath(destination, path);
 
             dirToTarget = (destination - transform.position).normalized;
-            angleCheck = Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2;
-            distanceCheck = Vector3.Distance(destination, origin) > minSearchDistance; // min distance  
-        } while (!angleCheck && !distanceCheck && i < 30);
+            angleCheck = (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2);
+            distanceCheck = (Vector3.Distance(destination, origin) > minSearchDistance); // min distance  
+        } while (!angleCheck && !distanceCheck && i < 30 && !isValid);
+
+        dirToTarget = (destination - transform.position).normalized;
+        Debug.Log(Vector3.Angle(transform.forward, dirToTarget));
 
         if (i >= 30)
         {
@@ -257,7 +258,6 @@ public class Animal : MonoBehaviour
         else
         {
             Debug.Log("Founded some points");
-            Instantiate(indicator, returnedRandomPoint, transform.rotation);
             return returnedRandomPoint;
         }
         return Vector3.negativeInfinity;
@@ -268,4 +268,9 @@ public class Animal : MonoBehaviour
         Destroy(this.gameObject);
     }
 
+    IEnumerator ReturnToIdleAfter15Sec()
+    {
+        yield return new WaitForSeconds(15f);
+        goIdle = true;
+    }
 }

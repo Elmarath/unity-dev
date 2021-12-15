@@ -34,6 +34,8 @@ public class SearchForMate : State
     }
     public override void HandleInput()
     {
+        base.HandleInput();
+
         isArrived = animal.IsCloseEnough(destination, 1f);
         foundedMate = fow.returnedGameObject;
     }
@@ -41,6 +43,11 @@ public class SearchForMate : State
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+
+        if (animal.goIdle)
+        {
+            stateMachine.ChangeState(animal.idle);
+        }
 
         if (foundedMate)
         {

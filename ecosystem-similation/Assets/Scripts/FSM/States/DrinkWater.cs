@@ -24,6 +24,7 @@ public class DrinkWater : State
     }
     public override void HandleInput()
     {
+        base.HandleInput();
         if (!animal.foundedWater)
         {
             exitState = true;
@@ -38,6 +39,12 @@ public class DrinkWater : State
 
     public override void LogicUpdate()
     {
+        base.LogicUpdate();
+        if (animal.goIdle)
+        {
+            stateMachine.ChangeState(animal.idle);
+        }
+
         if (isFull)
         {
             stateMachine.ChangeState(animal.idle);

@@ -28,6 +28,7 @@ public class GoForFood : State
     }
     public override void HandleInput()
     {
+        base.HandleInput();
         isFoodStillAvalible = animal.foundedFood.GetComponent<Food>().isEatable;
         isFoodStartedToBeEaten = animal.foundedFood.GetComponent<Food>().isStartedToBeEaten;
         isArrived = animal.IsCloseEnough(_foodLocation, 2f);
@@ -35,6 +36,11 @@ public class GoForFood : State
 
     public override void LogicUpdate()
     {
+        base.LogicUpdate();
+        if (animal.goIdle)
+        {
+            stateMachine.ChangeState(animal.idle);
+        }
         if (isFoodStartedToBeEaten)
         {
             stateMachine.ChangeState(animal.idle);

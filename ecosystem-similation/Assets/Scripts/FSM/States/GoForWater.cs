@@ -26,11 +26,17 @@ public class GoForWater : State
     }
     public override void HandleInput()
     {
+        base.HandleInput();
         isArrived = animal.IsCloseEnough(_waterLocation, 1f);
     }
 
     public override void LogicUpdate()
     {
+        base.LogicUpdate();
+        if (animal.goIdle)
+        {
+            stateMachine.ChangeState(animal.idle);
+        }
         if (isArrived)
         {
             stateMachine.ChangeState(animal.drinkWater);

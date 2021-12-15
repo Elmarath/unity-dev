@@ -36,6 +36,8 @@ public class SearchForFood : State
     }
     public override void HandleInput()
     {
+        base.HandleInput();
+
         isArrived = animal.IsCloseEnough(destination, 1f);
         foundedFood = fow.returnedGameObject;
 
@@ -56,6 +58,10 @@ public class SearchForFood : State
     {
         base.LogicUpdate();
 
+        if (animal.goIdle)
+        {
+            stateMachine.ChangeState(animal.idle);
+        }
         if (foundedFood && isFoodAvalible && !isFoodStatedToBeEaten)
         {
             stateMachine.ChangeState(animal.goForFood);

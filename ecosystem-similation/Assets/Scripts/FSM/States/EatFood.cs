@@ -28,6 +28,7 @@ public class EatFood : State
     }
     public override void HandleInput()
     {
+        base.HandleInput();
         if (!animal.foundedFood)
         {
             exitState = true;
@@ -37,6 +38,11 @@ public class EatFood : State
 
     public override void LogicUpdate()
     {
+        base.LogicUpdate();
+        if (animal.goIdle)
+        {
+            stateMachine.ChangeState(animal.idle);
+        }
         if (isFoodFinished)
         {
             animal.curHunger += animal.gettingFullMultiplier;

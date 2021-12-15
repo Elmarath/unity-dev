@@ -22,10 +22,17 @@ public class GoForMate : State
     }
     public override void HandleInput()
     {
+        base.HandleInput();
     }
 
     public override void LogicUpdate()
     {
+        base.LogicUpdate();
+
+        if (animal.goIdle)
+        {
+            stateMachine.ChangeState(animal.idle);
+        }
     }
 
 }
