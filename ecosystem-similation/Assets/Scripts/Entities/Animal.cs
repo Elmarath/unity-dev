@@ -148,8 +148,12 @@ public class Animal : MonoBehaviour
         thirstBar.SetThirst(curThirst);
         reproduceUrgeBar.SetReproduceUrge(curHorny);
 
+        // update states
         movementSM.CurrentState.HandleInput();
         movementSM.CurrentState.LogicUpdate();
+
+        // test
+        CreateRandomValidPoint(transform.position, 2f);
     }
 
     public Vector3 CreateRandomDestination()
@@ -170,7 +174,7 @@ public class Animal : MonoBehaviour
             Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * distance;
             randomDirection.y = 0;
             randomDirection += origin;
-
+            // check if destination valid
             NavMesh.SamplePosition(randomDirection, out navHit, distance, layermask);
             destination = navHit.position;
 
@@ -197,6 +201,66 @@ public class Animal : MonoBehaviour
     {
         Vector3 _position = new Vector3(transform.position.x, 0, transform.position.z);
         return Vector3.Distance(destination, _position) < tolerance;
+    }
+
+    public Vector3 CreateRandomValidPoint(Vector3 center, float radius)
+    {
+        Vector3 returnedRandomPoint;
+        float x;
+        float z;
+        bool change;
+        bool isValid = false;
+        NavMeshPath path = new NavMeshPath();
+
+        int i = 0;
+
+        do
+        {
+            do
+            {
+                x = Random.Range(0.001f, radius);
+                z = Mathf.Sqrt(radius - Mathf.Pow(x, 2f)); // may return NaN values
+            } while (float.IsNaN(z));
+            change = (Random.Range(0.001f, 1f) <= 0.5f);
+            if (change)
+            {
+                float temp;
+                temp = x;
+                x = z;
+                z = temp;
+            }
+            change = (Random.Range(0f, 1f) <= 0.5f);
+            if (change)
+            {
+                x *= -1;
+            }
+            change = (Random.Range(0f, 1f) <= 0.5f);
+            if (change)
+            {
+                z *= -1;
+            }
+            Debug.Log("x: " + x);
+            Debug.Log("z: " + z);
+            returnedRandomPoint = center + new Vector3(x, 0f, z);
+            isValid = agent.CalculatePath(returnedRandomPoint, path);
+            if (isValid)
+            {
+                break;
+            }
+            i++;
+        } while (!isValid && i <= 30);
+
+        if (i > 30)
+        {
+            Debug.Log("All founded points are not valid");
+        }
+        else
+        {
+            Debug.Log("Founded some points");
+            Instantiate(indicator, returnedRandomPoint, transform.rotation);
+            return returnedRandomPoint;
+        }
+        return Vector3.negativeInfinity;
     }
 
     public void Die()

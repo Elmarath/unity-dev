@@ -14,7 +14,6 @@ public class FieldOfView : MonoBehaviour
     public LayerMask targetMask;
     [HideInInspector]
     public LayerMask obstackeMask;
-    [HideInInspector]
     public List<GameObject> visibleTargets = new List<GameObject>();
 
     IEnumerator FindTargetsWithDelay(float delay)
@@ -46,8 +45,6 @@ public class FieldOfView : MonoBehaviour
                     returnedGameObject = visibleTargets[visibleTargets.Count - 1];
                     if (!(visibleTargets[visibleTargets.Count - 1] == selfRef))
                     {
-                        Debug.Log("returned gameobject " + returnedGameObject);
-                        Debug.Log("Self Ref " + selfRef);
                         return returnedGameObject;
                     }
                     visibleTargets.Remove(selfRef);
