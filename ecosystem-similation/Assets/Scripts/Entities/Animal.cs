@@ -160,29 +160,27 @@ public class Animal : MonoBehaviour
         Vector3 origin = transform.position;
         Vector3 dirToTarget;
         float distance = viewRadius;
+        int layermask = 1;
         Vector3 destination;
-        NavMeshPath path = new NavMeshPath();
+        NavMeshHit navHit;
         bool angleCheck;
         bool distanceCheck;
-        bool isValid;
 
         int i = 0;
         do
         {
             i++;
-            destination = UnityEngine.Random.insideUnitSphere * distance;
-            destination.y = 0;
-            destination += origin;
-            // check if destination valid
-            isValid = agent.CalculatePath(destination, path);
+            Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * distance;
+            randomDirection.y = 0;
+            randomDirection += origin;
+
+            NavMesh.SamplePosition(randomDirection, out navHit, distance, layermask);
+            destination = navHit.position;
 
             dirToTarget = (destination - transform.position).normalized;
-            angleCheck = (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2);
-            distanceCheck = (Vector3.Distance(destination, origin) > minSearchDistance); // min distance  
-        } while (!angleCheck && !distanceCheck && i < 30 && !isValid);
-
-        dirToTarget = (destination - transform.position).normalized;
-        Debug.Log(Vector3.Angle(transform.forward, dirToTarget));
+            angleCheck = Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2;
+            distanceCheck = Vector3.Distance(destination, origin) > minSearchDistance; // min distance  
+        } while (!angleCheck && !distanceCheck && i < 30);
 
         if (i >= 30)
         {
