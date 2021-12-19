@@ -5,9 +5,16 @@ using UnityEngine.AI;
 
 public class Animal : MonoBehaviour
 {
+    public enum Gender
+    {
+        male,
+        female,
+        baby
+    };
+
     #region AnimalVeraiableAttributes
     public float normalSpeed = 5f;
-    public float waitTime = 1f; // wait for next casual destination
+    public float waitTime = 0.6f; // wait for next casual destination
     [Range(1, 5)]
     public float minSearchDistance = 2f;
     public float maxHunger = 100f;
@@ -17,8 +24,10 @@ public class Animal : MonoBehaviour
     public float gettingHungryRate = 2f; // deletes x point per sec
     [Range(0.25f, 10)]
     public float gettingThirstyRate = 3.5f;
-    [Range(0.25f, 10)]
+    [Range(0f, 10)]
     public float gettingHornyRate = 0.75f;
+    [Range(0.25f, 10)]
+    public float pregnantTimeRate = 10f;
     public float gettingFullMultiplier = 30f;
     public float drinkingRate = 30f;
     #endregion
@@ -53,6 +62,8 @@ public class Animal : MonoBehaviour
     public DrinkWater drinkWater;
     [HideInInspector]
     public SearchForMate searchForMate;
+    [HideInInspector]
+    public MakeBirth makeBirth;
     #endregion
 
     #region StateChangeVeriables
@@ -63,13 +74,16 @@ public class Animal : MonoBehaviour
     [HideInInspector]
     public bool isHorny = false;
     [HideInInspector]
-    public bool goIdle;
+    public bool goIdle = false;
+    [HideInInspector]
+    public bool readyToBirth = false;
     [HideInInspector]
     public GameObject foundedFood;
     [HideInInspector]
     public GameObject foundedWater;
     [HideInInspector]
     public GameObject foundedMate;
+    public bool isPregnant;
     #endregion
 
     #region FieldOfView
@@ -88,14 +102,19 @@ public class Animal : MonoBehaviour
     private HungerBar hungerBar;
     private ThirstBar thirstBar;
     private ReproduceUrgeBar reproduceUrgeBar;
+    private CurrentStateTextUI textUI;
     public GameObject indicator;
     #endregion
 
     #region animalSurvivalVariables
+    public int howManyChildren = 3;
     public float curHunger;
     public float curThirst;
     public float curHorny;
-    #endregion 
+    public float curPergnantPersentance;
+    #endregion
+
+    public Gender gender;
 
     private void Awake()
     {
@@ -115,15 +134,25 @@ public class Animal : MonoBehaviour
         goForMate = new GoForMate(this, movementSM);
         eatFood = new EatFood(this, movementSM);
         drinkWater = new DrinkWater(this, movementSM);
+        makeBirth = new MakeBirth(this, movementSM);
 
         curHunger = maxHunger;
         curThirst = maxThirst;
         curHorny = maxReproduceUrge;
 
+        gender = (Gender)Random.Range(0, 2);
+
         //UI
         hungerBar = GetComponentInChildren<HungerBar>();
         thirstBar = GetComponentInChildren<ThirstBar>();
         reproduceUrgeBar = GetComponentInChildren<ReproduceUrgeBar>();
+        textUI = GetComponentInChildren<CurrentStateTextUI>();
+
+        //masks
+        // foodMask.value = 8;
+        // waterMask.value = 4;
+        // rabbitMask.value = 6;
+        // obstacleMask.value = 7;
 
         movementSM.Initialize(idle);
     }
@@ -144,6 +173,11 @@ public class Animal : MonoBehaviour
         curHunger -= Time.deltaTime * gettingHungryRate;
         curThirst -= Time.deltaTime * gettingThirstyRate;
         curHorny -= Time.deltaTime * gettingHornyRate;
+
+        if (isPregnant)
+        {
+            curPergnantPersentance += Time.deltaTime * pregnantTimeRate;
+        }
 
         //Update UI elements
         hungerBar.SetThirst(curHunger);
@@ -266,9 +300,21 @@ public class Animal : MonoBehaviour
         Destroy(this.gameObject);
     }
 
-    IEnumerator ReturnToIdleAfter15Sec()
+    public IEnumerator ReturnToIdleAfter15Sec()
     {
         yield return new WaitForSeconds(15f);
         goIdle = true;
+    }
+
+    IEnumerator MakeBirthWithRate(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Debug.Log("Birth!");
+        //Instantiate(rabbit, transform.position, transform.rotation);
+    }
+
+    public void UpdateTextUI(string updatedText)
+    {
+        textUI.SetText(updatedText);
     }
 }

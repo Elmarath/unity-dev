@@ -7,7 +7,6 @@ public class EatFood : State
     private bool isFoodFinished;
     private GameObject foundFood;
     private Food _foodToBeEatenRef;
-    private Vector3 foodLocation;
 
     private bool exitState;
 

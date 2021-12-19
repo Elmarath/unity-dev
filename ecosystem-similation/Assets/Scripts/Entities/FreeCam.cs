@@ -42,6 +42,7 @@ public class FreeCam : MonoBehaviour
     /// <summary>
     /// Amount to zoom the camera when using the mouse wheel (fast mode).
     /// </summary>
+    [Tooltip("Health value between 0 and 100.")]
     public float fastZoomSensitivity = 50f;
 
     /// <summary>

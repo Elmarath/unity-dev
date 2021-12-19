@@ -43,8 +43,6 @@ public class SearchForFood : State
 
         if (foundedFood)
         {
-            Debug.Log(foundedFood.name);
-
             isFoodAvalible = foundedFood.GetComponent<Food>().isEatable;
 
             if (isFoodAvalible)

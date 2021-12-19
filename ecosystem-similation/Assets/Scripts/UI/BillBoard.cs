@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class BillBoard : MonoBehaviour
 {
-    private Transform cam;
+    private Camera cam;
 
     private void Awake()
     {
-        cam = Camera.main.transform;
+        cam = Camera.main;
     }
 
     private void LateUpdate()
     {
-        transform.LookAt(transform.position + cam.forward);
+        transform.LookAt(cam.transform);
+        transform.Rotate(0f, 180f, 0f);
     }
 }

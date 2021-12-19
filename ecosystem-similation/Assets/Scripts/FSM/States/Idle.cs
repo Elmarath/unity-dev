@@ -31,16 +31,12 @@ public class Idle : State
         base.HandleInput();
         _waitTime -= Time.deltaTime;
 
-        // if sees a predator exit
+        // TODO: if sees a predator exit
 
-        // TODO: if hungry exit
-        animal.isHungry = (animal.curHunger < 70);
-        // TODO: if thirsty exit
-        animal.isThirsty = (animal.curThirst < 70);
-        // TODO: if horny exit
-        animal.isHorny = (animal.curHorny < 70);
-        // after curtain time exit
-
+        animal.isHungry = (animal.curHunger < 70f);
+        animal.isThirsty = (animal.curThirst < 70f);
+        animal.isHorny = (animal.curHorny < 70f);
+        animal.readyToBirth = (animal.curPergnantPersentance > 99f);
 
         if (_waitTime <= 0f)
         {
@@ -62,9 +58,13 @@ public class Idle : State
             animal.Die();
         }
 
-        else if (isWaitTimeOver && (animal.isHungry || animal.isThirsty || animal.isHorny))
+        else if (isWaitTimeOver && (animal.isHungry || animal.isThirsty || animal.isHorny || animal.readyToBirth))
         {
-            if (animal.isHungry && (animal.curHunger <= animal.curThirst) && (animal.curHunger <= animal.curHorny))
+            if (animal.readyToBirth)
+            {
+                stateMachine.ChangeState(animal.makeBirth); 
+            }
+            else if (animal.isHungry && (animal.curHunger <= animal.curThirst) && (animal.curHunger <= animal.curHorny))
             {
                 stateMachine.ChangeState(animal.searchForFood);
             }

@@ -11,6 +11,7 @@ public abstract class State
 
     public virtual void Enter()
     {
+        animal.UpdateTextUI(GetType().ToString());
         // whenever we enter a new state start a coroutine to return to idle state
         animal.goIdle = false;
         animal.StartCoroutine("ReturnToIdleAfter15Sec");

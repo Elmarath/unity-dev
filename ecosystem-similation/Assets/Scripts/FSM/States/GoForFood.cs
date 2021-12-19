@@ -19,6 +19,7 @@ public class GoForFood : State
         base.Enter();
         foundedFood = animal.foundedFood;
         _foodLocation = animal.foundedFood.transform.position;
+        _foodLocation.y = 0;
         animal.GotoDestination(_foodLocation);
     }
 
