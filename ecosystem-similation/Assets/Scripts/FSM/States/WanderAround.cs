@@ -43,6 +43,11 @@ public class WanderAround : State
     {
         base.LogicUpdate();
 
+        if (animal.goIdle)
+        {
+            stateMachine.ChangeState(animal.idle);
+        }
+
         if (isArrived)
         {
             stateMachine.ChangeState(animal.idle);

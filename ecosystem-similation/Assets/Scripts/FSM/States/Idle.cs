@@ -6,7 +6,6 @@ public class Idle : State
 {
     private bool isWaitTimeOver;
     private float _waitTime;
-    private bool _isHungry;
     private bool readyToDie;
 
     public Idle(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
@@ -32,24 +31,19 @@ public class Idle : State
         base.HandleInput();
         _waitTime -= Time.deltaTime;
 
-        // if sees a predator exit
+        // TODO: if sees a predator exit
 
-        // TODO: if hungry exit
-        animal.isHungry = (animal.curHunger < 70);
-        _isHungry = animal.isHungry;
-        // TODO: if thirsty exit
-
-        // TODO: if horny exit
-
-        // after curtain time exit
-
+        animal.isHungry = (animal.curHunger < 70f);
+        animal.isThirsty = (animal.curThirst < 70f);
+        animal.isHorny = (animal.curHorny < 70f);
+        animal.readyToBirth = (animal.curPergnantPersentance > 99f);
 
         if (_waitTime <= 0f)
         {
             isWaitTimeOver = true;
         }
 
-        if (animal.curHunger <= 0)
+        if (animal.curHunger <= 0 || animal.curThirst <= 0)
         {
             readyToDie = true;
         }
@@ -64,9 +58,29 @@ public class Idle : State
             animal.Die();
         }
 
-        if (isWaitTimeOver && _isHungry)
+        else if (isWaitTimeOver && (animal.isHungry || animal.isThirsty || animal.isHorny || animal.readyToBirth))
         {
-            stateMachine.ChangeState(animal.searchForFood);
+            if (animal.readyToBirth)
+            {
+                stateMachine.ChangeState(animal.makeBirth); 
+            }
+            else if (animal.isHungry && (animal.curHunger <= animal.curThirst) && (animal.curHunger <= animal.curHorny))
+            {
+                stateMachine.ChangeState(animal.searchForFood);
+            }
+            else if (animal.isThirsty && (animal.curThirst < animal.curHunger) && (animal.curThirst < animal.curHorny))
+            {
+                stateMachine.ChangeState(animal.searchForWater);
+            }
+            else if (animal.isHorny && (animal.curHorny < animal.curHunger) && (animal.curHorny < animal.curThirst))
+            {
+                stateMachine.ChangeState(animal.searchForMate);
+            }
+
+            else
+            {
+                Debug.LogError("Logic Error");
+            }
         }
         else if (isWaitTimeOver)
         {

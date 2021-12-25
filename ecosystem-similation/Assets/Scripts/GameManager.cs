@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
             {
                 Time.timeScale -= 3f;
             }
-            else if(Time.timeScale >= 0.3 && Time.timeScale <= 1.1f)
+            else if (Time.timeScale >= 0.3 && Time.timeScale <= 1.1f)
             {
                 Time.timeScale -= 0.2f;
             }

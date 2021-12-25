@@ -4,22 +4,22 @@ using UnityEngine.UI;
 public class HungerBar : MonoBehaviour
 {
     private Slider slider;
-    private Transform hungerBar;
+    private float _maxHunger;
 
     private void Awake()
     {
-        slider = transform.GetChild(1).GetChild(0).GetComponent<Slider>();
+        slider = transform.GetChild(0).GetChild(0).GetComponent<Slider>();
     }
 
     public void SetMaxHunger(float maxHunger)
     {
-
+        _maxHunger = maxHunger;
         slider.maxValue = maxHunger;
-        slider.value = maxHunger;
+        slider.value = 0;
     }
 
     public void SetThirst(float hunger)
     {
-        slider.value = hunger;
+        slider.value = _maxHunger - hunger;
     }
 }

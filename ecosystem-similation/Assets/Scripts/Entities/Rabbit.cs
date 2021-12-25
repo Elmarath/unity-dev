@@ -25,14 +25,15 @@ public class Rabbit : MonoBehaviour
         {
             // TODO: if not reached in 15 seconds find a new destination
             GotoDestination(destination);
-        } else
+        }
+        else
         {
             FoolAround(20);
         }
-        
+
     }
 
-   
+
 
     private void GotoDestination(Vector3 n_destination)
     {
@@ -45,7 +46,7 @@ public class Rabbit : MonoBehaviour
     private void FoolAround(float radius)
     {
         destination = CreateRandDestination(radius);
-        
+
     }
 
     private bool IsReadyToMoveNextLocation()
@@ -68,7 +69,7 @@ public class Rabbit : MonoBehaviour
 
     // Creates a random destination with given radius (y = 0)
     private Vector3 CreateRandDestination(float radius)
-    {   
+    {
         bool signMultiplier_0 = (Random.value < 0.5);
         bool signMultiplier_1 = (Random.value < 0.5);
         bool signMultiplier_2 = (Random.value < 0.5);
@@ -127,7 +128,6 @@ public class Rabbit : MonoBehaviour
         if (other.tag == "Food")
         {
             GoForFood(other.GetComponentInParent<Transform>());
-            Debug.Log("Triggered by Food");
         }
         if (other.tag == "Water")
         {

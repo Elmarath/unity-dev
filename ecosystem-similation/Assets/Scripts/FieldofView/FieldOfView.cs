@@ -9,14 +9,16 @@ public class FieldOfView : MonoBehaviour
     [HideInInspector]
     public GameObject returnedGameObject;
     [HideInInspector]
+    public GameObject selfRef;
+    [HideInInspector]
     public LayerMask targetMask;
     [HideInInspector]
     public LayerMask obstackeMask;
-    [HideInInspector]
     public List<GameObject> visibleTargets = new List<GameObject>();
 
     IEnumerator FindTargetsWithDelay(float delay)
     {
+        returnedGameObject = null;
         while (true)
         {
             yield return new WaitForSeconds(delay);
@@ -40,8 +42,14 @@ public class FieldOfView : MonoBehaviour
                 if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstackeMask))
                 {
                     visibleTargets.Add(targetObject);
-                    returnedGameObject = targetObject;
-                    return targetObject;
+                    returnedGameObject = visibleTargets[visibleTargets.Count - 1];
+                    if (!(visibleTargets[visibleTargets.Count - 1] == selfRef))
+                    {
+                        return returnedGameObject;
+                    }
+                    visibleTargets.Remove(selfRef);
+                    returnedGameObject = null;
+                    return null;
                 }
             }
         }

@@ -2,23 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EatFood : State
+public class DrinkWater : State
 {
-    private bool isFoodFinished;
-    private GameObject foundFood;
-    private Food _foodToBeEatenRef;
+    private bool isFull;
+    private GameObject waterFound;
 
     private bool exitState;
 
-    public EatFood(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
+    public DrinkWater(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
     {
     }
 
     public override void Enter()
     {
         base.Enter();
-        _foodToBeEatenRef = animal.foundedFood.GetComponent<Food>();
-        _foodToBeEatenRef.GetEaten();
     }
 
     public override void Exit()
@@ -28,11 +25,16 @@ public class EatFood : State
     public override void HandleInput()
     {
         base.HandleInput();
-        if (!animal.foundedFood)
+        if (!animal.foundedWater)
         {
             exitState = true;
         }
-        isFoodFinished = !_foodToBeEatenRef.isEatable;
+        isFull = ((animal.maxThirst - 0.5f) <= animal.curThirst);
+
+        if (!isFull)
+        {
+            animal.curThirst += Time.deltaTime * animal.drinkingRate;
+        }
     }
 
     public override void LogicUpdate()
@@ -42,9 +44,9 @@ public class EatFood : State
         {
             stateMachine.ChangeState(animal.idle);
         }
-        if (isFoodFinished)
+
+        if (isFull)
         {
-            animal.curHunger += animal.gettingFullMultiplier;
             stateMachine.ChangeState(animal.idle);
         }
 
