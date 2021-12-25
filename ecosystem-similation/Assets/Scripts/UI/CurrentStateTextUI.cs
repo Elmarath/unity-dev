@@ -9,7 +9,7 @@ public class CurrentStateTextUI : MonoBehaviour
         _text = transform.GetChild(0).GetChild(3).GetComponent<Text>();
     }
 
-    public void SetText(string text)
+    public void SetStateText(string text)
     {
         _text.text = text;
     }

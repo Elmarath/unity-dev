@@ -146,15 +146,12 @@ public class Animal : MonoBehaviour
         hungerBar = GetComponentInChildren<HungerBar>();
         thirstBar = GetComponentInChildren<ThirstBar>();
         reproduceUrgeBar = GetComponentInChildren<ReproduceUrgeBar>();
-        textUI = GetComponentInChildren<CurrentStateTextUI>();
 
         //masks
         // foodMask.value = 8;
         // waterMask.value = 4;
         // rabbitMask.value = 6;
         // obstacleMask.value = 7;
-
-        movementSM.Initialize(idle);
     }
 
     void Start()
@@ -162,9 +159,13 @@ public class Animal : MonoBehaviour
         agent.speed = normalSpeed;
 
         //UI elements
+        textUI = GetComponentInChildren<CurrentStateTextUI>();
         hungerBar.SetMaxHunger(maxHunger);
         thirstBar.SetMaxThirst(maxThirst);
         reproduceUrgeBar.SetMaxReproduceUrge(maxReproduceUrge);
+
+        //initialize
+        movementSM.Initialize(idle);
     }
 
     void Update()
@@ -315,6 +316,6 @@ public class Animal : MonoBehaviour
 
     public void UpdateTextUI(string updatedText)
     {
-        textUI.SetText(updatedText);
+        textUI.SetStateText(updatedText);
     }
 }
