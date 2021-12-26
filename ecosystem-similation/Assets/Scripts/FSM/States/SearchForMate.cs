@@ -40,15 +40,17 @@ public class SearchForMate : State
 
         isArrived = animal.IsCloseEnough(destination, 1f);
         GameObject foundedMateObj = fow.returnedGameObject;
+
         if (foundedMateObj)
         {
             foundedMate = foundedMateObj.GetComponent<Animal>();
-        }
-
-        if (foundedMateObj && (animal.gender == Animal.Gender.female))
-        {
-            Vector3 matingGround = animal.DecideMatingGround();
-            readyToMate = true;
+            Debug.Log(foundedMate.name);
+            if ((foundedMate.gender != Animal.Gender.baby) && (foundedMate.gender != animal.gender))
+            {
+                // if founded mate agrees : 
+                Vector3 matingGround = animal.DecideMatingGround();
+                readyToMate = true;
+            }
         }
     }
 
@@ -63,9 +65,9 @@ public class SearchForMate : State
 
         if (readyToMate)
         {
-            Debug.Log("Going for mate!");
-            Debug.Log(foundedMate.transform.position);
-            stateMachine.ChangeState(animal.goForMate);
+            foundedMate.readyToGoForMate = true;
+            Debug.Log("Waiting for mate!");
+            //stateMachine.ChangeState(animal.waitForMate);
         }
 
         if (isArrived)

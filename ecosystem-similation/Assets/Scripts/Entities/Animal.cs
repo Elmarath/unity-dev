@@ -57,6 +57,8 @@ public class Animal : MonoBehaviour
     [HideInInspector]
     public GoForMate goForMate;
     [HideInInspector]
+    public WaitForMate waitForMate;
+    [HideInInspector]
     public WanderAround wanderAround;
     [HideInInspector]
     public EatFood eatFood;
@@ -70,15 +72,13 @@ public class Animal : MonoBehaviour
 
     #region StateChangeVeriables
     [HideInInspector]
-    public bool isHungry = false;
-    [HideInInspector]
-    public bool isThirsty = false;
-    [HideInInspector]
     public bool isHorny = false;
     [HideInInspector]
     public bool goIdle = false;
     [HideInInspector]
     public bool readyToBirth = false;
+    [HideInInspector]
+    public bool readyToGoForMate = false;
     [HideInInspector]
     public GameObject foundedFood;
     [HideInInspector]
@@ -130,8 +130,8 @@ public class Animal : MonoBehaviour
     private void Awake()
     {
         StopAllCoroutines();
-
         agent = GetComponent<NavMeshAgent>();
+        agent.speed = normalSpeed;
         fow = GetComponent<FieldOfView>();
         fow.selfRef = gameObject;
         viewRadius = fow.viewRadius;
@@ -145,6 +145,7 @@ public class Animal : MonoBehaviour
         goForFood = new GoForFood(this, movementSM);
         goForWater = new GoForWater(this, movementSM);
         goForMate = new GoForMate(this, movementSM);
+        waitForMate = new WaitForMate(this, movementSM);
         eatFood = new EatFood(this, movementSM);
         drinkWater = new DrinkWater(this, movementSM);
         makeBirth = new MakeBirth(this, movementSM);

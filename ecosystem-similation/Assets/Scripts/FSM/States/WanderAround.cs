@@ -5,7 +5,6 @@ using UnityEngine;
 public class WanderAround : State
 {
     private bool isArrived;
-    private bool _isHungry;
     private float speed;
     private FieldOfView fow;
 
@@ -24,7 +23,6 @@ public class WanderAround : State
         fow = animal.fow;
         fow.StopAllCoroutines();
         fow.targetMask = animal.nothingMask;
-        _isHungry = animal.isHungry;
         speed = animal.normalSpeed;
         destination = animal.CreateRandomDestination();
         animal.GotoDestination(destination);

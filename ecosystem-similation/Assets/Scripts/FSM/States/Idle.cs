@@ -83,7 +83,12 @@ public class Idle : State
         {
             if (animal.readyToBirth)
             {
-                stateMachine.ChangeState(animal.searchForFood);
+                stateMachine.ChangeState(animal.makeBirth);
+            }
+            else if (animal.readyToGoForMate)
+            {
+                Debug.Log("GoingForMate");
+                stateMachine.ChangeState(animal.goForMate);
             }
             else if (maxNeedValue >= 30f)
             {

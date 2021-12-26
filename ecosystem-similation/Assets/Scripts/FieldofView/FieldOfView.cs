@@ -30,7 +30,6 @@ public class FieldOfView : MonoBehaviour
     {
         visibleTargets.Clear();
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
-
         for (int i = 0; i < targetsInViewRadius.Length; i++)
         {
             GameObject targetObject = targetsInViewRadius[i].gameObject;
@@ -43,7 +42,7 @@ public class FieldOfView : MonoBehaviour
                 {
                     visibleTargets.Add(targetObject);
                     returnedGameObject = visibleTargets[visibleTargets.Count - 1];
-                    if (!(visibleTargets[visibleTargets.Count - 1] == selfRef))
+                    if (!(visibleTargets[visibleTargets.Count - 1].transform == selfRef.transform))
                     {
                         return returnedGameObject;
                     }
