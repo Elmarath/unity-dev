@@ -20,6 +20,6 @@ public class HungerBar : MonoBehaviour
 
     public void SetThirst(float hunger)
     {
-        slider.value = _maxHunger - hunger;
+        slider.value = hunger;
     }
 }

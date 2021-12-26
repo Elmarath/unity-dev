@@ -20,7 +20,7 @@ public class Animal : MonoBehaviour
     public float minSearchDistance = 2f;
     public float maxHunger = 100f;
     public float maxThirst = 100f;
-    public float maxReproduceUrge = 100f;
+    public float maxReproduceUrge = 60f;
     [Range(0.25f, 10)]
     public float gettingHungryRate = 2f; // deletes x point per sec
     [Range(0.25f, 10)]
@@ -149,9 +149,9 @@ public class Animal : MonoBehaviour
         drinkWater = new DrinkWater(this, movementSM);
         makeBirth = new MakeBirth(this, movementSM);
 
-        curHunger = maxHunger;
-        curThirst = maxThirst;
-        curHorny = maxReproduceUrge;
+        curHunger = 0f;
+        curThirst = 0f;
+        curHorny = 0f;
 
         gender = (Gender)Random.Range(0, 2);
         agent.speed = normalSpeed;
@@ -183,9 +183,12 @@ public class Animal : MonoBehaviour
     void Update()
     {
         //update SurvivalVariables
-        curHunger -= Time.deltaTime * gettingHungryRate;
-        curThirst -= Time.deltaTime * gettingThirstyRate;
-        curHorny -= Time.deltaTime * gettingHornyRate;
+        if (curHunger <= maxHunger)
+            curHunger += Time.deltaTime * gettingHungryRate;
+        if (curThirst <= maxThirst)
+            curThirst += Time.deltaTime * gettingThirstyRate;
+        if (curHorny <= maxReproduceUrge)
+            curHorny += Time.deltaTime * gettingHornyRate;
 
         if (isPregnant)
         {

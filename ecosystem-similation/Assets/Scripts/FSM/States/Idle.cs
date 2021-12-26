@@ -7,6 +7,18 @@ public class Idle : State
     private bool isWaitTimeOver;
     private float _waitTime;
     private bool readyToDie;
+    private float maxNeedValue = 0f;
+    private int maxNeedIndex = 0;
+
+    private enum ToState
+    {
+        searchForFood,
+        searchForWater,
+        searchForMate,
+        nullState,
+    };
+
+    private ToState goToState;
 
     public Idle(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
     {
@@ -16,8 +28,8 @@ public class Idle : State
     public override void Enter()
     {
         base.Enter();
+        goToState = ToState.nullState;
         _waitTime = animal.waitTime;
-
         isWaitTimeOver = false;
     }
 
@@ -31,12 +43,21 @@ public class Idle : State
         base.HandleInput();
         _waitTime -= Time.deltaTime;
 
-        // TODO: if sees a predator exit
+        animal.readyToBirth = (animal.curPergnantPersentance >= 100f);
 
-        animal.isHungry = (animal.curHunger < 70f);
-        animal.isThirsty = (animal.curThirst < 70f);
-        animal.isHorny = (animal.curHorny < 70f);
-        animal.readyToBirth = (animal.curPergnantPersentance > 99f);
+        float[] needsArray = { animal.curHunger, animal.curThirst, animal.curHorny };
+
+        maxNeedIndex = 0;
+        maxNeedValue = 0f;
+        for (int i = 0; i < needsArray.Length; i++)
+        {
+            if (maxNeedValue < needsArray[i])
+            {
+                maxNeedValue = needsArray[i];
+                maxNeedIndex = i;
+            }
+        }
+        goToState = (ToState)maxNeedIndex;
 
         if (_waitTime <= 0f)
         {
@@ -58,32 +79,57 @@ public class Idle : State
             animal.Die();
         }
 
-        else if (isWaitTimeOver && (animal.isHungry || animal.isThirsty || animal.isHorny || animal.readyToBirth))
+        if (isWaitTimeOver)
         {
             if (animal.readyToBirth)
             {
-                stateMachine.ChangeState(animal.makeBirth);
-            }
-            else if (animal.isHungry && (animal.curHunger <= animal.curThirst) && (animal.curHunger <= animal.curHorny))
-            {
                 stateMachine.ChangeState(animal.searchForFood);
             }
-            else if (animal.isThirsty && (animal.curThirst < animal.curHunger) && (animal.curThirst < animal.curHorny))
+            else if (maxNeedValue >= 30f)
             {
-                stateMachine.ChangeState(animal.searchForWater);
+                switch (goToState)
+                {
+                    case ToState.searchForFood:
+                        stateMachine.ChangeState(animal.searchForFood);
+                        break;
+                    case ToState.searchForWater:
+                        stateMachine.ChangeState(animal.searchForWater);
+                        break;
+                    case ToState.searchForMate:
+                        stateMachine.ChangeState(animal.searchForMate);
+                        break;
+                }
             }
-            else if (animal.isHorny && (animal.curHorny < animal.curHunger) && (animal.curHorny < animal.curThirst) && (animal.gender == Animal.Gender.male))
+            else if (!(maxNeedValue >= 30f))
             {
-                stateMachine.ChangeState(animal.searchForMate);
-            }
-            else
-            {
-                Debug.LogError("Logic Error");
+                stateMachine.ChangeState(animal.wanderAround);
             }
         }
-        else if (isWaitTimeOver)
-        {
-            stateMachine.ChangeState(animal.wanderAround);
-        }
+
+
+        // else if (isWaitTimeOver && (animal.isHungry || animal.isThirsty || animal.isHorny || animal.readyToBirth))
+        // {
+        //     if (animal.readyToBirth)
+        //     {
+        //         stateMachine.ChangeState(animal.makeBirth);
+        //     }
+        //     else if (animal.isHungry && (animal.curHunger <= animal.curThirst) && (animal.curHunger <= animal.curHorny))
+        //     {
+        //         stateMachine.ChangeState(animal.searchForFood);
+        //     }
+        //     else if (animal.isThirsty && (animal.curThirst < animal.curHunger) && (animal.curThirst < animal.curHorny))
+        //     {
+        //         stateMachine.ChangeState(animal.searchForWater);
+        //     }
+        //     else if (animal.isHorny && (animal.curHorny < animal.curHunger) && (animal.curHorny < animal.curThirst) && (animal.gender == Animal.Gender.male))
+        //     {
+        //         stateMachine.ChangeState(animal.searchForMate);
+        //     }
+        //     else
+        //     {
+        //         Debug.LogError("Logic Error");
+        //     }
+        // }
+
     }
 }

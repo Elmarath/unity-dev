@@ -44,7 +44,7 @@ public class EatFood : State
         }
         if (isFoodFinished)
         {
-            animal.curHunger += animal.gettingFullMultiplier;
+            animal.curHunger -= animal.gettingFullMultiplier;
             stateMachine.ChangeState(animal.idle);
         }
 

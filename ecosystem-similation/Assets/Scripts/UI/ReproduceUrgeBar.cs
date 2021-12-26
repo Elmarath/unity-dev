@@ -21,6 +21,6 @@ public class ReproduceUrgeBar : MonoBehaviour
 
     public void SetReproduceUrge(float reproduceUrge)
     {
-        slider.value = _maxReproduceUrge - reproduceUrge;
+        slider.value = reproduceUrge;
     }
 }

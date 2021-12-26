@@ -29,11 +29,11 @@ public class DrinkWater : State
         {
             exitState = true;
         }
-        isFull = ((animal.maxThirst - 0.5f) <= animal.curThirst);
+        isFull = animal.curThirst < 1f;
 
         if (!isFull)
         {
-            animal.curThirst += Time.deltaTime * animal.drinkingRate;
+            animal.curThirst -= Time.deltaTime * animal.drinkingRate;
         }
     }
 

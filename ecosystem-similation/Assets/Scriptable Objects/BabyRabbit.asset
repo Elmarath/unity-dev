@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23f7418d62c6f40abb9161fbe52b470a, type: 3}
   m_Name: BabyRabbit
   m_EditorClassIdentifier: 
-  babyRabbit: {fileID: 0}
+  babyRabbit: {fileID: 8208868680609834299, guid: 85fdd4a99f30444eab272c528ef9158b, type: 3}
