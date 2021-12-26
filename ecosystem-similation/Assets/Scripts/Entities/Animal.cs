@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.AI;
 
 public class Animal : MonoBehaviour
@@ -37,6 +38,7 @@ public class Animal : MonoBehaviour
     public LayerMask waterMask;
     public LayerMask rabbitMask;
     public LayerMask obstacleMask;
+    public LayerMask nothingMask;
     #endregion
 
     #region StateVeriables
@@ -82,7 +84,7 @@ public class Animal : MonoBehaviour
     [HideInInspector]
     public GameObject foundedWater;
     [HideInInspector]
-    public GameObject foundedMate;
+    public Animal foundedMate;
     public bool isPregnant;
     #endregion
 
@@ -103,7 +105,16 @@ public class Animal : MonoBehaviour
     private ThirstBar thirstBar;
     private ReproduceUrgeBar reproduceUrgeBar;
     private CurrentStateTextUI textUI;
+    [HideInInspector]
+    public Slider hungerBarSlider;
+    [HideInInspector]
+    public Slider thirstBarSlider;
+    [HideInInspector]
+    public Slider reproduceUrgeBarSlider;
+    [HideInInspector]
+    public Text currentStateTextUIText;
     public GameObject indicator;
+    public BabyRabbitData babyRabbitData;
     #endregion
 
     #region animalSurvivalVariables
@@ -118,6 +129,8 @@ public class Animal : MonoBehaviour
 
     private void Awake()
     {
+        StopAllCoroutines();
+
         agent = GetComponent<NavMeshAgent>();
         fow = GetComponent<FieldOfView>();
         fow.selfRef = gameObject;
@@ -141,25 +154,24 @@ public class Animal : MonoBehaviour
         curHorny = maxReproduceUrge;
 
         gender = (Gender)Random.Range(0, 2);
-
-        //UI
-        hungerBar = GetComponentInChildren<HungerBar>();
-        thirstBar = GetComponentInChildren<ThirstBar>();
-        reproduceUrgeBar = GetComponentInChildren<ReproduceUrgeBar>();
-
-        //masks
-        // foodMask.value = 8;
-        // waterMask.value = 4;
-        // rabbitMask.value = 6;
-        // obstacleMask.value = 7;
-    }
-
-    void Start()
-    {
         agent.speed = normalSpeed;
 
         //UI elements
-        textUI = GetComponentInChildren<CurrentStateTextUI>();
+        hungerBarSlider = transform.GetChild(0).GetChild(0).GetComponent<Slider>();
+        thirstBarSlider = transform.GetChild(0).GetChild(1).GetComponent<Slider>();
+        reproduceUrgeBarSlider = transform.GetChild(0).GetChild(2).GetComponent<Slider>();
+        currentStateTextUIText = transform.GetChild(0).GetChild(3).GetComponent<Text>();
+
+        hungerBar = GetComponent<HungerBar>();
+        thirstBar = GetComponent<ThirstBar>();
+        reproduceUrgeBar = GetComponent<ReproduceUrgeBar>();
+        textUI = GetComponent<CurrentStateTextUI>();
+
+        hungerBar._init_(hungerBarSlider);
+        thirstBar._init_(thirstBarSlider);
+        reproduceUrgeBar._init_(reproduceUrgeBarSlider);
+        textUI._init_(currentStateTextUIText);
+
         hungerBar.SetMaxHunger(maxHunger);
         thirstBar.SetMaxThirst(maxThirst);
         reproduceUrgeBar.SetMaxReproduceUrge(maxReproduceUrge);
@@ -310,12 +322,17 @@ public class Animal : MonoBehaviour
     IEnumerator MakeBirthWithRate(float delay)
     {
         yield return new WaitForSeconds(delay);
-        Debug.Log("Birth!");
-        //Instantiate(rabbit, transform.position, transform.rotation);
+        Instantiate(babyRabbitData.babyRabbit, transform.position, transform.rotation);
     }
 
     public void UpdateTextUI(string updatedText)
     {
         textUI.SetStateText(updatedText);
+    }
+
+    public Vector3 DecideMatingGround()
+    {
+        Vector3 matingGround = CreateRandomValidPoint(transform.position, 2f);
+        return matingGround;
     }
 }

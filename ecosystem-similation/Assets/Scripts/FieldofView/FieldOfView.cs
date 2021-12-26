@@ -6,15 +6,15 @@ public class FieldOfView : MonoBehaviour
 {
     public float viewRadius = 10;
     public float viewAngle = 120;
+    public LayerMask targetMask;
+    public List<GameObject> visibleTargets = new List<GameObject>();
+
     [HideInInspector]
     public GameObject returnedGameObject;
     [HideInInspector]
     public GameObject selfRef;
     [HideInInspector]
-    public LayerMask targetMask;
-    [HideInInspector]
     public LayerMask obstackeMask;
-    public List<GameObject> visibleTargets = new List<GameObject>();
 
     IEnumerator FindTargetsWithDelay(float delay)
     {

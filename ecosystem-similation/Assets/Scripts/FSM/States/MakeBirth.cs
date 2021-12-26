@@ -5,7 +5,7 @@ using UnityEngine;
 public class MakeBirth : State
 {
     private int howManyChildren = 3;
-    private float makingBirthTimeRate = 0.5f;
+    private float makingBirthTimeRate = 1f;
     private float totalBirthTime;
     private bool isBirthFinished;
 
@@ -34,7 +34,6 @@ public class MakeBirth : State
         animal.isPregnant = false;
         animal.curPergnantPersentance = 0f;
         animal.StopCoroutine("MakeBirthWithRate");
-        //StopCoroutine("MakeBirthWithRate");
     }
     public override void HandleInput()
     {

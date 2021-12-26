@@ -7,6 +7,7 @@ public class WanderAround : State
     private bool isArrived;
     private bool _isHungry;
     private float speed;
+    private FieldOfView fow;
 
 
     private Vector3 destination;
@@ -20,7 +21,9 @@ public class WanderAround : State
     public override void Enter()
     {
         base.Enter();
-        // Set a destination
+        fow = animal.fow;
+        fow.StopAllCoroutines();
+        fow.targetMask = animal.nothingMask;
         _isHungry = animal.isHungry;
         speed = animal.normalSpeed;
         destination = animal.CreateRandomDestination();

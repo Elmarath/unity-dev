@@ -3,12 +3,12 @@ using UnityEngine.UI;
 
 public class HungerBar : MonoBehaviour
 {
-    private Slider slider;
     private float _maxHunger;
+    private Slider slider;
 
-    private void Awake()
+    public void _init_(Slider _slider)
     {
-        slider = transform.GetChild(0).GetChild(0).GetComponent<Slider>();
+        slider = _slider;
     }
 
     public void SetMaxHunger(float maxHunger)

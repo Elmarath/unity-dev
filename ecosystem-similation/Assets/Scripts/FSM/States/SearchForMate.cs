@@ -6,8 +6,9 @@ public class SearchForMate : State
 {
     private Vector3 destination;
     private FieldOfView fow;
-    private GameObject foundedMate;
+    private Animal foundedMate;
     private bool isArrived;
+    private bool readyToMate;
 
     public SearchForMate(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
     {
@@ -31,13 +32,24 @@ public class SearchForMate : State
         base.Exit();
         animal.foundedMate = foundedMate;
         isArrived = false;
+        readyToMate = false;
     }
     public override void HandleInput()
     {
         base.HandleInput();
 
         isArrived = animal.IsCloseEnough(destination, 1f);
-        foundedMate = fow.returnedGameObject;
+        GameObject foundedMateObj = fow.returnedGameObject;
+        if (foundedMateObj)
+        {
+            foundedMate = foundedMateObj.GetComponent<Animal>();
+        }
+
+        if (foundedMateObj && (animal.gender == Animal.Gender.female))
+        {
+            Vector3 matingGround = animal.DecideMatingGround();
+            readyToMate = true;
+        }
     }
 
     public override void LogicUpdate()
@@ -49,11 +61,11 @@ public class SearchForMate : State
             stateMachine.ChangeState(animal.idle);
         }
 
-        if (foundedMate)
+        if (readyToMate)
         {
             Debug.Log("Going for mate!");
             Debug.Log(foundedMate.transform.position);
-            //stateMachine.ChangeState(animal.goForMate);
+            stateMachine.ChangeState(animal.goForMate);
         }
 
         if (isArrived)

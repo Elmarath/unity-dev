@@ -3,14 +3,16 @@ using UnityEngine.UI;
 
 public class CurrentStateTextUI : MonoBehaviour
 {
-    private Text _text;
-    private void Awake()
+
+    private Text text1;
+
+    public void _init_(Text _text)
     {
-        _text = transform.GetChild(0).GetChild(3).GetComponent<Text>();
+        text1 = _text;
     }
 
     public void SetStateText(string text)
     {
-        _text.text = text;
+        text1.text = text;
     }
 }

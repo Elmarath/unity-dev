@@ -3,12 +3,13 @@ using UnityEngine.UI;
 
 public class ThirstBar : MonoBehaviour
 {
-    private Slider slider;
     private float _maxThirst;
 
-    private void Awake()
+    private Slider slider;
+
+    public void _init_(Slider _slider)
     {
-        slider = transform.GetChild(0).GetChild(1).GetComponent<Slider>();
+        slider = _slider;
     }
 
     public void SetMaxThirst(float maxThirst)

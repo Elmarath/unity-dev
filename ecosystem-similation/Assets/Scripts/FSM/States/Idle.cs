@@ -62,7 +62,7 @@ public class Idle : State
         {
             if (animal.readyToBirth)
             {
-                stateMachine.ChangeState(animal.makeBirth); 
+                stateMachine.ChangeState(animal.makeBirth);
             }
             else if (animal.isHungry && (animal.curHunger <= animal.curThirst) && (animal.curHunger <= animal.curHorny))
             {
@@ -72,11 +72,10 @@ public class Idle : State
             {
                 stateMachine.ChangeState(animal.searchForWater);
             }
-            else if (animal.isHorny && (animal.curHorny < animal.curHunger) && (animal.curHorny < animal.curThirst))
+            else if (animal.isHorny && (animal.curHorny < animal.curHunger) && (animal.curHorny < animal.curThirst) && (animal.gender == Animal.Gender.male))
             {
                 stateMachine.ChangeState(animal.searchForMate);
             }
-
             else
             {
                 Debug.LogError("Logic Error");

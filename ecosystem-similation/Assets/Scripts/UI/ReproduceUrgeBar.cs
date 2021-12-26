@@ -3,12 +3,13 @@ using UnityEngine.UI;
 
 public class ReproduceUrgeBar : MonoBehaviour
 {
-    private Slider slider;
     private float _maxReproduceUrge;
 
-    private void Awake()
+    private Slider slider;
+
+    public void _init_(Slider _slider)
     {
-        slider = transform.GetChild(0).GetChild(2).GetComponent<Slider>();
+        slider = _slider;
     }
 
     public void SetMaxReproduceUrge(float maxReproduceUrge)
