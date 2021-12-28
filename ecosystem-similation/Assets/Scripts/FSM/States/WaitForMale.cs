@@ -2,16 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WaitForMate : State
+public class WaitForMale : State
 {
-    public WaitForMate(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
-    {
 
+    public WaitForMale(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
+    {
     }
 
     public override void Enter()
     {
         base.Enter();
+        animal.goIdle = false;
+        animal.GotoDestination(animal.transform.position);
+        animal.matingGround = animal.DecideMatingGround();
     }
 
     public override void Exit()
@@ -26,10 +29,9 @@ public class WaitForMate : State
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
-        if (animal.goIdle)
+        if (animal.foundedMate.isMating)
         {
-            stateMachine.ChangeState(animal.idle);
+            stateMachine.ChangeState(animal.mate);
         }
     }
 }

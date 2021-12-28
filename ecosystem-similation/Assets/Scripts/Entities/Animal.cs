@@ -55,17 +55,18 @@ public class Animal : MonoBehaviour
     [HideInInspector]
     public GoForWater goForWater;
     [HideInInspector]
-    public GoForMate goForMate;
+    public GoForFamele goForFamele;
     [HideInInspector]
-    public WaitForMate waitForMate;
+    public WaitForMale waitForMale;
     [HideInInspector]
     public WanderAround wanderAround;
     [HideInInspector]
+    public Mate mate;
     public EatFood eatFood;
     [HideInInspector]
     public DrinkWater drinkWater;
     [HideInInspector]
-    public SearchForMate searchForMate;
+    public SearchForFamele searchForFamele;
     [HideInInspector]
     public MakeBirth makeBirth;
     #endregion
@@ -80,11 +81,21 @@ public class Animal : MonoBehaviour
     [HideInInspector]
     public bool readyToGoForMate = false;
     [HideInInspector]
+    public bool readyToWaitForMale = false;
+    [HideInInspector]
     public GameObject foundedFood;
     [HideInInspector]
     public GameObject foundedWater;
     [HideInInspector]
+    public Animal candidateMate;
+    [HideInInspector]
     public Animal foundedMate;
+    [HideInInspector]
+    public Vector3 matingGround;
+    [HideInInspector]
+    public Animal previousMate;
+    [HideInInspector]
+    public bool isMating;
     public bool isPregnant;
     #endregion
 
@@ -113,6 +124,8 @@ public class Animal : MonoBehaviour
     public Slider reproduceUrgeBarSlider;
     [HideInInspector]
     public Text currentStateTextUIText;
+    [HideInInspector]
+    public string causeOfDeath;
     public GameObject indicator;
     public BabyRabbitData babyRabbitData;
     #endregion
@@ -141,11 +154,12 @@ public class Animal : MonoBehaviour
         wanderAround = new WanderAround(this, movementSM);
         searchForFood = new SearchForFood(this, movementSM);
         searchForWater = new SearchForWater(this, movementSM);
-        searchForMate = new SearchForMate(this, movementSM);
+        searchForFamele = new SearchForFamele(this, movementSM);
         goForFood = new GoForFood(this, movementSM);
         goForWater = new GoForWater(this, movementSM);
-        goForMate = new GoForMate(this, movementSM);
-        waitForMate = new WaitForMate(this, movementSM);
+        goForFamele = new GoForFamele(this, movementSM);
+        waitForMale = new WaitForMale(this, movementSM);
+        mate = new Mate(this, movementSM);
         eatFood = new EatFood(this, movementSM);
         drinkWater = new DrinkWater(this, movementSM);
         makeBirth = new MakeBirth(this, movementSM);
@@ -156,6 +170,7 @@ public class Animal : MonoBehaviour
 
         gender = (Gender)Random.Range(0, 2);
         agent.speed = normalSpeed;
+        previousMate = null;
 
         //UI elements
         hungerBarSlider = transform.GetChild(0).GetChild(0).GetComponent<Slider>();
@@ -185,12 +200,29 @@ public class Animal : MonoBehaviour
     {
         //update SurvivalVariables
         if (curHunger <= maxHunger)
+        {
             curHunger += Time.deltaTime * gettingHungryRate;
-        if (curThirst <= maxThirst)
-            curThirst += Time.deltaTime * gettingThirstyRate;
-        if (curHorny <= maxReproduceUrge)
-            curHorny += Time.deltaTime * gettingHornyRate;
+        }
+        else
+        {
+            causeOfDeath = "Hunger";
+            Die();
+        }
 
+        if (curThirst <= maxThirst)
+        {
+            curThirst += Time.deltaTime * gettingThirstyRate;
+        }
+        else
+        {
+            causeOfDeath = "Thirst";
+            Die();
+        }
+
+        if (curHorny <= maxReproduceUrge)
+        {
+            curHorny += Time.deltaTime * gettingHornyRate;
+        }
         if (isPregnant)
         {
             curPergnantPersentance += Time.deltaTime * pregnantTimeRate;
@@ -289,8 +321,6 @@ public class Animal : MonoBehaviour
             {
                 z *= -1;
             }
-            Debug.Log("x: " + x);
-            Debug.Log("z: " + z);
             returnedRandomPoint = center + new Vector3(x, 0f, z);
             isValid = agent.CalculatePath(returnedRandomPoint, path);
             if (isValid)
@@ -306,7 +336,6 @@ public class Animal : MonoBehaviour
         }
         else
         {
-            Debug.Log("Founded some points");
             return returnedRandomPoint;
         }
         return Vector3.negativeInfinity;
@@ -314,6 +343,7 @@ public class Animal : MonoBehaviour
 
     public void Die()
     {
+        Debug.Log("Couse of death: " + causeOfDeath);
         Destroy(this.gameObject);
     }
 
@@ -323,10 +353,22 @@ public class Animal : MonoBehaviour
         goIdle = true;
     }
 
-    IEnumerator MakeBirthWithRate(float delay)
+    private IEnumerator ResetPreviousMate()
+    {
+        yield return new WaitForSeconds(30f);
+        previousMate = null;
+    }
+
+    public IEnumerator MakeBirthWithRate(float delay)
     {
         yield return new WaitForSeconds(delay);
         Instantiate(babyRabbitData.babyRabbit, transform.position, transform.rotation);
+    }
+
+    IEnumerator FinishMating(float matingDuration)
+    {
+        yield return new WaitForSeconds(matingDuration);
+        isMating = false;
     }
 
     public void UpdateTextUI(string updatedText)
@@ -336,7 +378,24 @@ public class Animal : MonoBehaviour
 
     public Vector3 DecideMatingGround()
     {
-        Vector3 matingGround = CreateRandomValidPoint(transform.position, 2f);
+        Vector3 matingGround = CreateRandomValidPoint(transform.position, 1f);
         return matingGround;
     }
+
+    public bool ValidateMatingCandidate(Animal candidateMale)
+    {
+        // if valid
+        // if not previously mated for 90sec
+        if (candidateMale != previousMate)
+        {
+            foundedMate = candidateMale;
+            previousMate = foundedMate;
+            StartCoroutine("ResetPreviousMate");
+            movementSM.ChangeState(waitForMale);
+            return true;
+        }
+        return false;
+    }
+
+
 }

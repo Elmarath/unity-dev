@@ -2,15 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SearchForMate : State
+public class SearchForFamele : State
 {
     private Vector3 destination;
     private FieldOfView fow;
-    private Animal foundedMate;
+    private bool goForMate;
     private bool isArrived;
-    private bool readyToMate;
 
-    public SearchForMate(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
+    public SearchForFamele(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
     {
 
     }
@@ -30,9 +29,13 @@ public class SearchForMate : State
     public override void Exit()
     {
         base.Exit();
-        animal.foundedMate = foundedMate;
         isArrived = false;
-        readyToMate = false;
+        if (animal.foundedMate)
+        {
+            animal.foundedMate.readyToWaitForMale = true;
+            animal.foundedMate.goIdle = true;
+        }
+
     }
     public override void HandleInput()
     {
@@ -43,13 +46,15 @@ public class SearchForMate : State
 
         if (foundedMateObj)
         {
-            foundedMate = foundedMateObj.GetComponent<Animal>();
-            Debug.Log(foundedMate.name);
-            if ((foundedMate.gender != Animal.Gender.baby) && (foundedMate.gender != animal.gender))
+            animal.foundedMate = foundedMateObj.GetComponentInParent<Animal>();
+            if ((animal.foundedMate.gender == Animal.Gender.female))
             {
-                // if founded mate agrees : 
-                Vector3 matingGround = animal.DecideMatingGround();
-                readyToMate = true;
+                animal.foundedMate.candidateMate = animal;
+
+                if (animal.foundedMate.ValidateMatingCandidate(animal) && (animal.foundedMate != animal.previousMate))
+                {
+                    goForMate = true;
+                }
             }
         }
     }
@@ -63,11 +68,9 @@ public class SearchForMate : State
             stateMachine.ChangeState(animal.idle);
         }
 
-        if (readyToMate)
+        if (goForMate)
         {
-            foundedMate.readyToGoForMate = true;
-            Debug.Log("Waiting for mate!");
-            //stateMachine.ChangeState(animal.waitForMate);
+            stateMachine.ChangeState(animal.goForFamele);
         }
 
         if (isArrived)

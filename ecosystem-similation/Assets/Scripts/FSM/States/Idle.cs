@@ -6,7 +6,6 @@ public class Idle : State
 {
     private bool isWaitTimeOver;
     private float _waitTime;
-    private bool readyToDie;
     private float maxNeedValue = 0f;
     private int maxNeedIndex = 0;
 
@@ -14,7 +13,6 @@ public class Idle : State
     {
         searchForFood,
         searchForWater,
-        searchForMate,
         nullState,
     };
 
@@ -36,7 +34,6 @@ public class Idle : State
     public override void Exit()
     {
         base.Exit();
-        readyToDie = false;
     }
     public override void HandleInput()
     {
@@ -45,7 +42,7 @@ public class Idle : State
 
         animal.readyToBirth = (animal.curPergnantPersentance >= 100f);
 
-        float[] needsArray = { animal.curHunger, animal.curThirst, animal.curHorny };
+        float[] needsArray = { animal.curHunger, animal.curThirst };
 
         maxNeedIndex = 0;
         maxNeedValue = 0f;
@@ -63,32 +60,17 @@ public class Idle : State
         {
             isWaitTimeOver = true;
         }
-
-        if (animal.curHunger <= 0 || animal.curThirst <= 0)
-        {
-            readyToDie = true;
-        }
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
 
-        if (readyToDie)
-        {
-            animal.Die();
-        }
-
         if (isWaitTimeOver)
         {
             if (animal.readyToBirth)
             {
                 stateMachine.ChangeState(animal.makeBirth);
-            }
-            else if (animal.readyToGoForMate)
-            {
-                Debug.Log("GoingForMate");
-                stateMachine.ChangeState(animal.goForMate);
             }
             else if (maxNeedValue >= 30f)
             {
@@ -100,41 +82,17 @@ public class Idle : State
                     case ToState.searchForWater:
                         stateMachine.ChangeState(animal.searchForWater);
                         break;
-                    case ToState.searchForMate:
-                        stateMachine.ChangeState(animal.searchForMate);
-                        break;
                 }
             }
+            else if ((animal.gender == Animal.Gender.male) && (animal.curHorny >= 30f))
+            {
+                stateMachine.ChangeState(animal.searchForFamele);
+            }
+
             else if (!(maxNeedValue >= 30f))
             {
                 stateMachine.ChangeState(animal.wanderAround);
             }
         }
-
-
-        // else if (isWaitTimeOver && (animal.isHungry || animal.isThirsty || animal.isHorny || animal.readyToBirth))
-        // {
-        //     if (animal.readyToBirth)
-        //     {
-        //         stateMachine.ChangeState(animal.makeBirth);
-        //     }
-        //     else if (animal.isHungry && (animal.curHunger <= animal.curThirst) && (animal.curHunger <= animal.curHorny))
-        //     {
-        //         stateMachine.ChangeState(animal.searchForFood);
-        //     }
-        //     else if (animal.isThirsty && (animal.curThirst < animal.curHunger) && (animal.curThirst < animal.curHorny))
-        //     {
-        //         stateMachine.ChangeState(animal.searchForWater);
-        //     }
-        //     else if (animal.isHorny && (animal.curHorny < animal.curHunger) && (animal.curHorny < animal.curThirst) && (animal.gender == Animal.Gender.male))
-        //     {
-        //         stateMachine.ChangeState(animal.searchForMate);
-        //     }
-        //     else
-        //     {
-        //         Debug.LogError("Logic Error");
-        //     }
-        // }
-
     }
 }

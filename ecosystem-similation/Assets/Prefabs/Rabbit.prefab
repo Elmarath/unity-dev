@@ -1152,7 +1152,7 @@ GameObject:
   - component: {fileID: 6159393170219624653}
   - component: {fileID: 6159393170219624642}
   - component: {fileID: 6159393170219624652}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RabbitBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1308,18 +1308,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cd2938c99cfd41c9aa7f9769f0e562c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSpeed: 5
+  normalSpeed: 3
   waitTime: 1
   minSearchDistance: 2
   maxHunger: 100
   maxThirst: 100
   maxReproduceUrge: 100
-  gettingHungryRate: 0.25
-  gettingThirstyRate: 0.25
-  gettingHornyRate: 1
+  gettingHungryRate: 1.2
+  gettingThirstyRate: 2
+  gettingHornyRate: 0.75
   pregnantTimeRate: 10
-  gettingFullMultiplier: 30
-  drinkingRate: 30
+  gettingFullMultiplier: 50
+  drinkingRate: 10
   foodMask:
     serializedVersion: 2
     m_Bits: 256
@@ -1335,14 +1335,18 @@ MonoBehaviour:
   nothingMask:
     serializedVersion: 2
     m_Bits: 2147483648
-  isHungry: 1
-  isThirsty: 0
   isHorny: 0
   goIdle: 0
   readyToBirth: 0
+  readyToGoForMate: 0
+  readyToWaitForMale: 0
   foundedFood: {fileID: 0}
   foundedWater: {fileID: 0}
+  candidateMate: {fileID: 0}
   foundedMate: {fileID: 0}
+  matingGround: {x: 0, y: 0, z: 0}
+  previousMate: {fileID: 0}
+  isMating: 0
   isPregnant: 0
   viewRadius: 18
   viewAngle: 120
