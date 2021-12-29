@@ -1313,10 +1313,10 @@ MonoBehaviour:
   minSearchDistance: 2
   maxHunger: 100
   maxThirst: 100
-  maxReproduceUrge: 100
-  gettingHungryRate: 1.2
-  gettingThirstyRate: 2
-  gettingHornyRate: 0.75
+  maxReproduceUrge: 70
+  gettingHungryRate: 1
+  gettingThirstyRate: 1.5
+  gettingHornyRate: 0.7
   pregnantTimeRate: 10
   gettingFullMultiplier: 50
   drinkingRate: 10
@@ -1356,6 +1356,7 @@ MonoBehaviour:
   thirstBarSlider: {fileID: 0}
   reproduceUrgeBarSlider: {fileID: 0}
   currentStateTextUIText: {fileID: 0}
+  causeOfDeath: 
   indicator: {fileID: 892497948501337228, guid: bd0b2974b01f449c99d86688adbe9dc5, type: 3}
   babyRabbitData: {fileID: 11400000, guid: 104d0ce69266c453ca2906416495850c, type: 2}
   howManyChildren: 3
