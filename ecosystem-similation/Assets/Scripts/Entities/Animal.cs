@@ -31,6 +31,9 @@ public class Animal : MonoBehaviour
     public float pregnantTimeRate = 10f;
     public float gettingFullMultiplier = 30f;
     public float drinkingRate = 30f;
+    public float becameAdultTime = 5f;
+    public Animal parentFamele = null;
+    public Animal parentMale = null;
     #endregion
 
     #region LayerMasks
@@ -96,7 +99,10 @@ public class Animal : MonoBehaviour
     public Animal previousMate;
     [HideInInspector]
     public bool isMating;
+    [HideInInspector]
     public bool isPregnant;
+    [HideInInspector]
+    public Animal fatherOfChild;
     #endregion
 
     #region FieldOfView
@@ -142,58 +148,7 @@ public class Animal : MonoBehaviour
 
     private void Awake()
     {
-        StopAllCoroutines();
-        agent = GetComponent<NavMeshAgent>();
-        agent.speed = normalSpeed;
-        fow = GetComponent<FieldOfView>();
-        fow.selfRef = gameObject;
-        viewRadius = fow.viewRadius;
-        viewAngle = fow.viewAngle;
-        movementSM = new StateMachine();
-        idle = new Idle(this, movementSM);
-        wanderAround = new WanderAround(this, movementSM);
-        searchForFood = new SearchForFood(this, movementSM);
-        searchForWater = new SearchForWater(this, movementSM);
-        searchForFamele = new SearchForFamele(this, movementSM);
-        goForFood = new GoForFood(this, movementSM);
-        goForWater = new GoForWater(this, movementSM);
-        goForFamele = new GoForFamele(this, movementSM);
-        waitForMale = new WaitForMale(this, movementSM);
-        mate = new Mate(this, movementSM);
-        eatFood = new EatFood(this, movementSM);
-        drinkWater = new DrinkWater(this, movementSM);
-        makeBirth = new MakeBirth(this, movementSM);
-
-        curHunger = 0f;
-        curThirst = 0f;
-        curHorny = 0f;
-
-        gender = (Gender)Random.Range(0, 2);
-        agent.speed = normalSpeed;
-        previousMate = null;
-
-        //UI elements
-        hungerBarSlider = transform.GetChild(0).GetChild(0).GetComponent<Slider>();
-        thirstBarSlider = transform.GetChild(0).GetChild(1).GetComponent<Slider>();
-        reproduceUrgeBarSlider = transform.GetChild(0).GetChild(2).GetComponent<Slider>();
-        currentStateTextUIText = transform.GetChild(0).GetChild(3).GetComponent<Text>();
-
-        hungerBar = GetComponent<HungerBar>();
-        thirstBar = GetComponent<ThirstBar>();
-        reproduceUrgeBar = GetComponent<ReproduceUrgeBar>();
-        textUI = GetComponent<CurrentStateTextUI>();
-
-        hungerBar._init_(hungerBarSlider);
-        thirstBar._init_(thirstBarSlider);
-        reproduceUrgeBar._init_(reproduceUrgeBarSlider);
-        textUI._init_(currentStateTextUIText);
-
-        hungerBar.SetMaxHunger(maxHunger);
-        thirstBar.SetMaxThirst(maxThirst);
-        reproduceUrgeBar.SetMaxReproduceUrge(maxReproduceUrge);
-
-        //initialize
-        movementSM.Initialize(idle);
+        InitializeAnimal();
     }
 
     void Update()
@@ -362,7 +317,10 @@ public class Animal : MonoBehaviour
     public IEnumerator MakeBirthWithRate(float delay)
     {
         yield return new WaitForSeconds(delay);
-        Instantiate(babyRabbitData.babyRabbit, transform.position, transform.rotation);
+        GameObject babyAnimalObject = Instantiate(babyRabbitData.babyRabbit, transform.position, transform.rotation);
+        Animal babyAnimal = babyAnimalObject.GetComponent<Animal>();
+        babyAnimal.parentMale = fatherOfChild;
+        babyAnimal.parentFamele = this;
     }
 
     IEnumerator FinishMating(float matingDuration)
@@ -398,5 +356,114 @@ public class Animal : MonoBehaviour
         return false;
     }
 
+    public void InitializeBabyAnimalAttributes()
+    {
+        normalSpeed = 2f;
+        waitTime = 0.6f; // wait for next casual destination
+        minSearchDistance = 2f;
+        maxHunger = 50f;
+        maxThirst = 50;
+        maxReproduceUrge = 0f;
+        gettingHungryRate = 0.5f; // deletes x point per sec
+        gettingThirstyRate = 0.5f;
+        gettingHornyRate = 0f;
+        pregnantTimeRate = 0f;
+        gettingFullMultiplier = 50f;
+        drinkingRate = 10f;
+        becameAdultTime = 5f;
+        gender = Animal.Gender.baby;
+    }
 
+    public void InitializeAnimalAttributes()
+    {
+        // if parents not exist
+        if (!(parentFamele || parentMale))
+        {
+            Debug.Log("Parents not exists");
+            normalSpeed = 5f;
+            waitTime = 0.6f; // wait for next casual destination
+            minSearchDistance = 2f;
+            maxHunger = 100f;
+            maxThirst = 100f;
+            maxReproduceUrge = 60f;
+            gettingHungryRate = 0.1f; // deletes x point per sec
+            gettingThirstyRate = 0.1f;
+            gettingHornyRate = 3f;
+            pregnantTimeRate = 10f;
+            gettingFullMultiplier = 30f;
+            drinkingRate = 30f;
+            becameAdultTime = 5f;
+            gender = (Gender)Random.Range(0, 2);
+        }
+        else
+        {
+            Debug.Log("Parents exists");
+
+        }
+    }
+    public void InitializeAnimal()
+    {
+        InitializeBabyAnimalAttributes();
+
+        StopAllCoroutines();
+        agent = GetComponent<NavMeshAgent>();
+        agent.speed = normalSpeed;
+        fow = GetComponent<FieldOfView>();
+        fow.selfRef = gameObject;
+        viewRadius = fow.viewRadius;
+        viewAngle = fow.viewAngle;
+        movementSM = new StateMachine();
+        idle = new Idle(this, movementSM);
+        wanderAround = new WanderAround(this, movementSM);
+        searchForFood = new SearchForFood(this, movementSM);
+        searchForWater = new SearchForWater(this, movementSM);
+        searchForFamele = new SearchForFamele(this, movementSM);
+        goForFood = new GoForFood(this, movementSM);
+        goForWater = new GoForWater(this, movementSM);
+        goForFamele = new GoForFamele(this, movementSM);
+        waitForMale = new WaitForMale(this, movementSM);
+        mate = new Mate(this, movementSM);
+        eatFood = new EatFood(this, movementSM);
+        drinkWater = new DrinkWater(this, movementSM);
+        makeBirth = new MakeBirth(this, movementSM);
+
+        curHunger = 0f;
+        curThirst = 0f;
+        curHorny = 0f;
+
+        StartCoroutine("BecameAdult");
+
+        agent.speed = normalSpeed;
+        previousMate = null;
+
+        //UI elements
+        hungerBarSlider = transform.GetChild(0).GetChild(0).GetComponent<Slider>();
+        thirstBarSlider = transform.GetChild(0).GetChild(1).GetComponent<Slider>();
+        reproduceUrgeBarSlider = transform.GetChild(0).GetChild(2).GetComponent<Slider>();
+        currentStateTextUIText = transform.GetChild(0).GetChild(3).GetComponent<Text>();
+
+        hungerBar = GetComponent<HungerBar>();
+        thirstBar = GetComponent<ThirstBar>();
+        reproduceUrgeBar = GetComponent<ReproduceUrgeBar>();
+        textUI = GetComponent<CurrentStateTextUI>();
+
+        hungerBar._init_(hungerBarSlider);
+        thirstBar._init_(thirstBarSlider);
+        reproduceUrgeBar._init_(reproduceUrgeBarSlider);
+        textUI._init_(currentStateTextUIText);
+
+        hungerBar.SetMaxHunger(maxHunger);
+        thirstBar.SetMaxThirst(maxThirst);
+        reproduceUrgeBar.SetMaxReproduceUrge(maxReproduceUrge);
+
+        //initialize first state
+        movementSM.Initialize(idle);
+    }
+
+    public IEnumerator BecameAdult()
+    {
+        yield return new WaitForSeconds(becameAdultTime);
+        Debug.Log("Became adult");
+        InitializeAnimalAttributes();
+    }
 }

@@ -34,6 +34,7 @@ public class MakeBirth : State
         animal.isPregnant = false;
         animal.curPergnantPersentance = 0f;
         animal.StopCoroutine("MakeBirthWithRate");
+        animal.fatherOfChild = null;
     }
     public override void HandleInput()
     {
