@@ -9043,6 +9043,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1670630170925029494, guid: 85fdd4a99f30444eab272c528ef9158b, type: 3}
+      propertyPath: gettingHornyRate
+      value: 3.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670630170925029494, guid: 85fdd4a99f30444eab272c528ef9158b, type: 3}
       propertyPath: gettingHungryRate
       value: 0.25
       objectReference: {fileID: 0}

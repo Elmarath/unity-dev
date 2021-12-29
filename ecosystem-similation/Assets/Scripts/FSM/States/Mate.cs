@@ -29,6 +29,8 @@ public class Mate : State
         animal.isMating = false;
         animal.foundedMate.isMating = false;
         animal.curHorny = 0f;
+        animal.foundedMate = null;
+        animal.readyToGoForMate = false;
     }
     public override void HandleInput()
     {

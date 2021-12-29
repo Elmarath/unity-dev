@@ -13,6 +13,7 @@ public class GoForFamele : State
     public override void Enter()
     {
         base.Enter();
+        Debug.Log(animal.foundedMate);
         animal.matingGround = animal.foundedMate.matingGround;
         animal.GotoDestination(animal.matingGround);
     }
@@ -25,7 +26,7 @@ public class GoForFamele : State
     public override void HandleInput()
     {
         base.HandleInput();
-        isArrived = Vector3.Distance(animal.transform.position, animal.matingGround) < 0.2f;
+        isArrived = Vector3.Distance(animal.transform.position, animal.matingGround) <= 1f;
     }
 
     public override void LogicUpdate()

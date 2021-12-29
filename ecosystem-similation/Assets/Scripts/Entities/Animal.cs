@@ -379,6 +379,7 @@ public class Animal : MonoBehaviour
     public Vector3 DecideMatingGround()
     {
         Vector3 matingGround = CreateRandomValidPoint(transform.position, 1f);
+        Instantiate(indicator, matingGround, transform.rotation);
         return matingGround;
     }
 

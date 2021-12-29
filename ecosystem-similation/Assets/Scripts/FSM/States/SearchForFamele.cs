@@ -19,6 +19,7 @@ public class SearchForFamele : State
         base.Enter();
 
         fow = animal.fow;
+        goForMate = false;
         fow.StopAllCoroutines();
         animal.fow.targetMask = animal.rabbitMask;
         animal.fow.StartCoroutine("FindTargetsWithDelay", .2f);
@@ -42,7 +43,8 @@ public class SearchForFamele : State
         base.HandleInput();
 
         isArrived = animal.IsCloseEnough(destination, 1f);
-        GameObject foundedMateObj = fow.returnedGameObject;
+        GameObject foundedMateObj = null;
+        foundedMateObj = fow.returnedGameObject;
 
         if (foundedMateObj)
         {
