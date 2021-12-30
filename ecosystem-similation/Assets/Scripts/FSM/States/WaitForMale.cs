@@ -34,7 +34,7 @@ public class WaitForMale : State
             stateMachine.ChangeState(animal.idle);
         }
 
-        if (animal.foundedMate.isMating)
+        else if (animal.foundedMate.isMating)
         {
             stateMachine.ChangeState(animal.mate);
         }

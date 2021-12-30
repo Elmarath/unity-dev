@@ -352,7 +352,7 @@ public class Animal : MonoBehaviour
     {
         // if valid
         // if not previously mated for 90sec
-        if (candidateMale != previousMate)
+        if ((curHorny >= 30f) && (candidateMale != previousMate))
         {
             foundedMate = candidateMale;
             previousMate = foundedMate;
@@ -373,6 +373,7 @@ public class Animal : MonoBehaviour
     public void Initialize(Animal _maleParent, Animal _fameleParent)
     {
         StopAllCoroutines();
+        StartCoroutine("DieFromOldAge");
         maleParent = _maleParent;
         fameleParent = _fameleParent;
         gender = Gender.baby;
@@ -385,6 +386,8 @@ public class Animal : MonoBehaviour
         {
             // initialing babyAnimalAttributes
             normalSpeed = 2f;
+            viewRadius = 12f;
+            viewAngle = 100f;
             waitTime = 1f;
             minSearchDistance = 1f;
             maxHunger = 50f;
@@ -399,12 +402,13 @@ public class Animal : MonoBehaviour
             drinkingRate = 50f;
             // start bacame adult
             StartCoroutine("BecameAdult");
-            StartCoroutine("DieFromOldAge");
         }
         agent = GetComponent<NavMeshAgent>();
         agent.speed = normalSpeed;
         fow = GetComponent<FieldOfView>();
         fow.selfRef = gameObject;
+        fow.viewRadius = viewRadius;
+        fow.viewAngle = viewAngle;
         viewRadius = fow.viewRadius;
         viewAngle = fow.viewAngle;
         movementSM = new StateMachine();
@@ -456,7 +460,7 @@ public class Animal : MonoBehaviour
 
     public float DecideNewGene(float maleAttr, float fameleAttr, float min, float max)
     {
-        float maxMutation = (max - min) / 10;
+        float maxMutation = (max - min) / 5;
         float newGeneValue = (maleAttr + fameleAttr) / 2 + Random.Range(-maxMutation, maxMutation);
         if (newGeneValue > max)
         {
@@ -472,6 +476,8 @@ public class Animal : MonoBehaviour
     {
         gender = (Gender)Random.Range(0, 2);
         normalSpeed = DecideNewGene(maleParent.normalSpeed, fameleParent.normalSpeed, 3f, 8f);
+        viewRadius = DecideNewGene(maleParent.viewRadius, fameleParent.viewRadius, 6f, 20f);
+        viewAngle = DecideNewGene(maleParent.viewAngle, fameleParent.viewAngle, 60f, 150f);
         waitTime = DecideNewGene(maleParent.waitTime, fameleParent.waitTime, 0.3f, 1.5f);
         minSearchDistance = DecideNewGene(maleParent.minSearchDistance, fameleParent.minSearchDistance, 0.2f, 4f);
         maxHunger = DecideNewGene(maleParent.maxHunger, fameleParent.maxHunger, 50f, 150f);
@@ -482,7 +488,7 @@ public class Animal : MonoBehaviour
         gettingThirstyRate = DecideNewGene(maleParent.gettingThirstyRate, fameleParent.gettingThirstyRate, 0.7f, 4f);
         gettingHornyRate = DecideNewGene(maleParent.gettingHungryRate, fameleParent.gettingHornyRate, 0.2f, 2f);
         pregnantTimeRate = 10f;
-        gettingFullMultiplier = DecideNewGene(maleParent.gettingFullMultiplier, fameleParent.gettingFullMultiplier, 30f, 70f);
+        gettingFullMultiplier = DecideNewGene(maleParent.gettingFullMultiplier, fameleParent.gettingFullMultiplier, 50f, 70f);
         drinkingRate = DecideNewGene(maleParent.drinkingRate, fameleParent.drinkingRate, 15f, 70f);
     }
 }

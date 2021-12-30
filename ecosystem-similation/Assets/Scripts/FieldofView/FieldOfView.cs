@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class FieldOfView : MonoBehaviour
 {
-    public float viewRadius = 10;
-    public float viewAngle = 120;
+    public float viewRadius;
+    public float viewAngle;
     public LayerMask targetMask;
     public List<GameObject> visibleTargets = new List<GameObject>();
 
