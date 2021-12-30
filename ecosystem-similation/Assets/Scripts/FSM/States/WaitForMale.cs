@@ -29,13 +29,14 @@ public class WaitForMale : State
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (animal.foundedMate.isMating)
-        {
-            stateMachine.ChangeState(animal.mate);
-        }
         if (animal.foundedMate == null)
         {
             stateMachine.ChangeState(animal.idle);
+        }
+
+        if (animal.foundedMate.isMating)
+        {
+            stateMachine.ChangeState(animal.mate);
         }
     }
 }

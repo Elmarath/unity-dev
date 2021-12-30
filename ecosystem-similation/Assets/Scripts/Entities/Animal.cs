@@ -33,6 +33,7 @@ public class Animal : MonoBehaviour
     public float pregnantTimeRate = 10f;
     public float gettingFullMultiplier = 30f;
     public float drinkingRate = 30f;
+    public float becomeAdultTime = 15f;
     public Gender gender;
     public Animal maleParent;
     public Animal fameleParent;
@@ -150,7 +151,6 @@ public class Animal : MonoBehaviour
 
     private void Awake()
     {
-        gameManager = FindObjectOfType<GameManager>();
         Initialize(maleParent, fameleParent);
     }
 
@@ -304,6 +304,13 @@ public class Animal : MonoBehaviour
         Destroy(this.gameObject);
     }
 
+    IEnumerator DieFromOldAge()
+    {
+        yield return new WaitForSeconds(240f);
+        causeOfDeath = "Old Age";
+        Die();
+    }
+
     public IEnumerator ReturnToIdleAfter15Sec()
     {
         yield return new WaitForSeconds(15f);
@@ -356,51 +363,52 @@ public class Animal : MonoBehaviour
         return false;
     }
 
+    public IEnumerator BecameAdult()
+    {
+        yield return new WaitForSeconds(becomeAdultTime);
+        DecideAdultGenes();
+
+    }
+
     public void Initialize(Animal _maleParent, Animal _fameleParent)
     {
+        StopAllCoroutines();
         maleParent = _maleParent;
         fameleParent = _fameleParent;
+        gender = Gender.baby;
 
-        StopAllCoroutines();
         if ((maleParent == null) || (fameleParent == null))
         {
-            Debug.Log(fameleParent);
-            Debug.Log(maleParent);
-            agent = GetComponent<NavMeshAgent>();
-            agent.speed = normalSpeed;
-            fow = GetComponent<FieldOfView>();
-            fow.selfRef = gameObject;
-            viewRadius = fow.viewRadius;
-            viewAngle = fow.viewAngle;
+            gender = (Gender)Random.Range(0, 2);
         }
         else
         {
-            normalSpeed = 5f;
-            waitTime = 0.6f; // wait for next casual destination
-            minSearchDistance = 2f;
-            maxHunger = 100f;
-            maxThirst = 100f;
-            maxReproduceUrge = 60f;
-            howManyChildren = 3;
-            gettingHungryRate = 1f; // deletes x point per sec
-            gettingThirstyRate = 1.8f;
-            gettingHornyRate = 0.75f;
-            pregnantTimeRate = 10f;
-            gettingFullMultiplier = 30f;
-            drinkingRate = 30f;
-
-            Debug.Log("Parents found");
-            Debug.Log(fameleParent);
-            Debug.Log(maleParent);
-            agent = GetComponent<NavMeshAgent>();
-            agent.speed = normalSpeed;
-            fow = GetComponent<FieldOfView>();
-            fow.selfRef = gameObject;
-            viewRadius = fow.viewRadius;
-            viewAngle = fow.viewAngle;
+            // initialing babyAnimalAttributes
+            normalSpeed = 2f;
+            waitTime = 1f;
+            minSearchDistance = 1f;
+            maxHunger = 50f;
+            maxThirst = 50f;
+            maxReproduceUrge = 0f;
+            howManyChildren = 0;
+            gettingHungryRate = 0.3f;
+            gettingThirstyRate = 0.6f;
+            gettingHornyRate = 0f;
+            pregnantTimeRate = 0f;
+            gettingFullMultiplier = 50f;
+            drinkingRate = 50f;
+            // start bacame adult
+            StartCoroutine("BecameAdult");
+            StartCoroutine("DieFromOldAge");
         }
-
+        agent = GetComponent<NavMeshAgent>();
+        agent.speed = normalSpeed;
+        fow = GetComponent<FieldOfView>();
+        fow.selfRef = gameObject;
+        viewRadius = fow.viewRadius;
+        viewAngle = fow.viewAngle;
         movementSM = new StateMachine();
+
         idle = new Idle(this, movementSM);
         wanderAround = new WanderAround(this, movementSM);
         searchForFood = new SearchForFood(this, movementSM);
@@ -419,7 +427,6 @@ public class Animal : MonoBehaviour
         curThirst = 0f;
         curHorny = 0f;
 
-        gender = (Gender)Random.Range(0, 2);
         agent.speed = normalSpeed;
         previousMate = null;
 
@@ -445,5 +452,37 @@ public class Animal : MonoBehaviour
 
         //initialize
         movementSM.Initialize(idle);
+    }
+
+    public float DecideNewGene(float maleAttr, float fameleAttr, float min, float max)
+    {
+        float maxMutation = (max - min) / 10;
+        float newGeneValue = (maleAttr + fameleAttr) / 2 + Random.Range(-maxMutation, maxMutation);
+        if (newGeneValue > max)
+        {
+            newGeneValue = max;
+        }
+        if (newGeneValue < min)
+        {
+            newGeneValue = min;
+        }
+        return newGeneValue;
+    }
+    public void DecideAdultGenes()
+    {
+        gender = (Gender)Random.Range(0, 2);
+        normalSpeed = DecideNewGene(maleParent.normalSpeed, fameleParent.normalSpeed, 3f, 8f);
+        waitTime = DecideNewGene(maleParent.waitTime, fameleParent.waitTime, 0.3f, 1.5f);
+        minSearchDistance = DecideNewGene(maleParent.minSearchDistance, fameleParent.minSearchDistance, 0.2f, 4f);
+        maxHunger = DecideNewGene(maleParent.maxHunger, fameleParent.maxHunger, 50f, 150f);
+        maxThirst = DecideNewGene(maleParent.maxThirst, fameleParent.maxThirst, 50f, 150f);
+        maxReproduceUrge = DecideNewGene(maleParent.maxReproduceUrge, fameleParent.maxReproduceUrge, 30f, 100f);
+        howManyChildren = 3;
+        gettingHungryRate = DecideNewGene(maleParent.gettingHungryRate, fameleParent.gettingHungryRate, 0.5f, 3f);
+        gettingThirstyRate = DecideNewGene(maleParent.gettingThirstyRate, fameleParent.gettingThirstyRate, 0.7f, 4f);
+        gettingHornyRate = DecideNewGene(maleParent.gettingHungryRate, fameleParent.gettingHornyRate, 0.2f, 2f);
+        pregnantTimeRate = 10f;
+        gettingFullMultiplier = DecideNewGene(maleParent.gettingFullMultiplier, fameleParent.gettingFullMultiplier, 30f, 70f);
+        drinkingRate = DecideNewGene(maleParent.drinkingRate, fameleParent.drinkingRate, 15f, 70f);
     }
 }
