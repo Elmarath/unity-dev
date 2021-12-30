@@ -7366,6 +7366,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1670630170925029494, guid: 85fdd4a99f30444eab272c528ef9158b, type: 3}
+      propertyPath: maleParent
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670630170925029494, guid: 85fdd4a99f30444eab272c528ef9158b, type: 3}
+      propertyPath: fameleParent
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670630170925029494, guid: 85fdd4a99f30444eab272c528ef9158b, type: 3}
       propertyPath: gettingHornyRate
       value: 3.39
       objectReference: {fileID: 0}
@@ -9042,6 +9050,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1670630170925029494, guid: 85fdd4a99f30444eab272c528ef9158b, type: 3}
+      propertyPath: maleParent
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1670630170925029494, guid: 85fdd4a99f30444eab272c528ef9158b, type: 3}
+      propertyPath: fameleParent
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1670630170925029494, guid: 85fdd4a99f30444eab272c528ef9158b, type: 3}
       propertyPath: gettingHornyRate
       value: 3.2

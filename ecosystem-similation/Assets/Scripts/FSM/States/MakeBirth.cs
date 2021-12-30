@@ -11,7 +11,6 @@ public class MakeBirth : State
 
     public MakeBirth(Animal animal, StateMachine stateMachine) : base(animal, stateMachine)
     {
-
     }
 
     public override void Enter()

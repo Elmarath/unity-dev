@@ -14,8 +14,11 @@ public class Mate : State
         base.Enter();
         animal.isMating = true;
         matingDuration = 5f;
-        animal.fatherOfChild = null;
         animal.StartCoroutine("FinishMating", matingDuration);
+        if (animal.gender == Animal.Gender.female)
+        {
+            animal.fatherOfChild = animal.foundedMate;
+        }
     }
 
     public override void Exit()
@@ -26,7 +29,6 @@ public class Mate : State
             animal.isPregnant = true;
         }
         animal.previousMate = animal.foundedMate;
-        animal.fatherOfChild = animal.foundedMate;
         animal.StartCoroutine("ResetPreviousMate");
         animal.isMating = false;
         animal.foundedMate.isMating = false;

@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -45,6 +47,5 @@ public class GameManager : MonoBehaviour
             // The fixed delta time will now be 0.02 real-time seconds per frame
             Time.fixedDeltaTime = this.m_FixedDeltaTime * Time.timeScale;
         }
-
     }
 }

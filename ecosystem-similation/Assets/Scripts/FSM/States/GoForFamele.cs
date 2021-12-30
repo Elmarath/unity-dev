@@ -13,6 +13,7 @@ public class GoForFamele : State
     public override void Enter()
     {
         base.Enter();
+        Debug.Log(animal.foundedMate);
         animal.matingGround = animal.foundedMate.matingGround;
         animal.GotoDestination(animal.matingGround);
     }
@@ -35,6 +36,11 @@ public class GoForFamele : State
         if (isArrived)
         {
             stateMachine.ChangeState(animal.mate);
+        }
+
+        if (animal.foundedMate == null)
+        {
+            stateMachine.ChangeState(animal.idle);
         }
 
         if (animal.goIdle)
