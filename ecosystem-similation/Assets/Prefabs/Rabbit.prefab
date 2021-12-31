@@ -1314,12 +1314,23 @@ MonoBehaviour:
   maxHunger: 100
   maxThirst: 100
   maxReproduceUrge: 70
-  gettingHungryRate: 1
-  gettingThirstyRate: 1.5
-  gettingHornyRate: 0.7
+  howManyChildren: 3
+  gettingHungryRate: 1.22
+  gettingThirstyRate: 1.17
+  gettingHornyRate: 0.86
   pregnantTimeRate: 10
   gettingFullMultiplier: 50
   drinkingRate: 10
+  becomeAdultTime: 15
+  gender: 0
+  maleParent: {fileID: 0}
+  fameleParent: {fileID: 0}
+  fatherOfChild: {fileID: 0}
+  curHunger: 0
+  curThirst: 0
+  curHorny: 0
+  curPergnantPersentance: 0
+  isPregnant: 0
   foodMask:
     serializedVersion: 2
     m_Bits: 256
@@ -1347,11 +1358,12 @@ MonoBehaviour:
   matingGround: {x: 0, y: 0, z: 0}
   previousMate: {fileID: 0}
   isMating: 0
-  isPregnant: 0
+  isInitialized: 0
   viewRadius: 18
   viewAngle: 120
   fow: {fileID: 0}
   foundTarget: {fileID: 0}
+  hierarchyParent: {fileID: 0}
   hungerBarSlider: {fileID: 0}
   thirstBarSlider: {fileID: 0}
   reproduceUrgeBarSlider: {fileID: 0}
@@ -1359,12 +1371,6 @@ MonoBehaviour:
   causeOfDeath: 
   indicator: {fileID: 892497948501337228, guid: bd0b2974b01f449c99d86688adbe9dc5, type: 3}
   babyRabbitData: {fileID: 11400000, guid: 104d0ce69266c453ca2906416495850c, type: 2}
-  howManyChildren: 3
-  curHunger: 0
-  curThirst: 0
-  curHorny: 0
-  curPergnantPersentance: 0
-  gender: 0
 --- !u!114 &1670630172121981679
 MonoBehaviour:
   m_ObjectHideFlags: 0

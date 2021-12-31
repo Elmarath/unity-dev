@@ -35,8 +35,11 @@ public class Animal : MonoBehaviour
     public float drinkingRate = 30f;
     public float becomeAdultTime = 15f;
     public Gender gender;
+    [HideInInspector]
     public Animal maleParent;
+    [HideInInspector]
     public Animal fameleParent;
+    [HideInInspector]
     public Animal fatherOfChild;
     #endregion
 
@@ -151,6 +154,7 @@ public class Animal : MonoBehaviour
 
     private void Awake()
     {
+        gameManager = FindObjectOfType<GameManager>();
         Initialize(maleParent, fameleParent);
     }
 
@@ -300,7 +304,7 @@ public class Animal : MonoBehaviour
 
     public void Die()
     {
-        Debug.Log("Couse of death: " + causeOfDeath);
+        gameManager.removeFromLivingAnimals(this);
         Destroy(this.gameObject);
     }
 
@@ -372,6 +376,7 @@ public class Animal : MonoBehaviour
 
     public void Initialize(Animal _maleParent, Animal _fameleParent)
     {
+        gameManager.addToLivingAnimals(this);
         StopAllCoroutines();
         StartCoroutine("DieFromOldAge");
         maleParent = _maleParent;
