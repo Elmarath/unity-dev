@@ -22,7 +22,7 @@ public class Animal : MonoBehaviour
     public float maxHunger = 100f;
     public float maxThirst = 100f;
     public float maxReproduceUrge = 60f;
-    public int howManyChildren = 3;
+    public float howManyChildren = 3f;
     [Range(0.25f, 10)]
     public float gettingHungryRate = 2f; // deletes x point per sec
     [Range(0.25f, 10)]
@@ -304,7 +304,7 @@ public class Animal : MonoBehaviour
 
     public void Die()
     {
-        gameManager.removeFromLivingAnimals(this);
+        gameManager.RemoveFromLivingAdultAnimals(this);
         Destroy(this.gameObject);
     }
 
@@ -354,8 +354,6 @@ public class Animal : MonoBehaviour
 
     public bool ValidateMatingCandidate(Animal candidateMale)
     {
-        // if valid
-        // if not previously mated for 90sec
         if ((curHorny >= 30f) && (candidateMale != previousMate))
         {
             foundedMate = candidateMale;
@@ -371,12 +369,12 @@ public class Animal : MonoBehaviour
     {
         yield return new WaitForSeconds(becomeAdultTime);
         DecideAdultGenes();
+        gameManager.AddToLivingAdultAnimals(this);
 
     }
 
     public void Initialize(Animal _maleParent, Animal _fameleParent)
     {
-        gameManager.addToLivingAnimals(this);
         StopAllCoroutines();
         StartCoroutine("DieFromOldAge");
         maleParent = _maleParent;
@@ -398,7 +396,7 @@ public class Animal : MonoBehaviour
             maxHunger = 50f;
             maxThirst = 50f;
             maxReproduceUrge = 0f;
-            howManyChildren = 0;
+            howManyChildren = 0f;
             gettingHungryRate = 0.3f;
             gettingThirstyRate = 0.6f;
             gettingHornyRate = 0f;
@@ -480,7 +478,7 @@ public class Animal : MonoBehaviour
     public void DecideAdultGenes()
     {
         gender = (Gender)Random.Range(0, 2);
-        normalSpeed = DecideNewGene(maleParent.normalSpeed, fameleParent.normalSpeed, 3f, 8f);
+        normalSpeed = DecideNewGene(maleParent.normalSpeed, fameleParent.normalSpeed, 2f, 8f);
         viewRadius = DecideNewGene(maleParent.viewRadius, fameleParent.viewRadius, 6f, 20f);
         viewAngle = DecideNewGene(maleParent.viewAngle, fameleParent.viewAngle, 60f, 150f);
         waitTime = DecideNewGene(maleParent.waitTime, fameleParent.waitTime, 0.3f, 1.5f);
@@ -488,7 +486,7 @@ public class Animal : MonoBehaviour
         maxHunger = DecideNewGene(maleParent.maxHunger, fameleParent.maxHunger, 50f, 150f);
         maxThirst = DecideNewGene(maleParent.maxThirst, fameleParent.maxThirst, 50f, 150f);
         maxReproduceUrge = DecideNewGene(maleParent.maxReproduceUrge, fameleParent.maxReproduceUrge, 30f, 100f);
-        howManyChildren = 3;
+        howManyChildren = DecideNewGene(maleParent.howManyChildren, fameleParent.howManyChildren, 1f, 6f);
         gettingHungryRate = DecideNewGene(maleParent.gettingHungryRate, fameleParent.gettingHungryRate, 0.5f, 3f);
         gettingThirstyRate = DecideNewGene(maleParent.gettingThirstyRate, fameleParent.gettingThirstyRate, 0.7f, 4f);
         gettingHornyRate = DecideNewGene(maleParent.gettingHungryRate, fameleParent.gettingHornyRate, 0.2f, 2f);

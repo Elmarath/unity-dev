@@ -5,15 +5,20 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-
+    public AnimalAttributes avAnimalAttr = new AnimalAttributes();
+    public float avarageNormalSpeed;
     public float timeScale;
-    public List<Animal> livingAnimals = new List<Animal>();
+    public GameObject initAnimals;
+    public List<Animal> livingAdultAnimals = new List<Animal>();
+    public List<AnimalAttributes> animalAttributesInMinute = new List<AnimalAttributes>();
+    private int totalExistedAnimalsInMinute = 0;
     private float m_FixedDeltaTime;
 
     void Awake()
     {
         this.m_FixedDeltaTime = Time.fixedDeltaTime;
         this.timeScale = Time.timeScale;
+        InvokeRepeating("ResetAnimalAttributesInMinute", 59f, 60f);
     }
 
     // Update is called once per frame
@@ -50,26 +55,66 @@ public class GameManager : MonoBehaviour
             // The fixed delta time will now be 0.02 real-time seconds per frame
             Time.fixedDeltaTime = this.m_FixedDeltaTime * Time.timeScale;
         }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Debug.Log("Initializing new animals");
+            Instantiate(initAnimals, new Vector3(0f, 0f, 0f), transform.rotation);
+        }
     }
 
-    public void addToLivingAnimals(Animal animal)
+    public void AddToLivingAdultAnimals(Animal animal)
     {
-        for (var i = livingAnimals.Count - 1; i > -1; i--)
+        totalExistedAnimalsInMinute++;
+        for (var i = livingAdultAnimals.Count - 1; i > -1; i--)
         {
-            if (livingAnimals[i] == null)
-                livingAnimals.RemoveAt(i);
+            if (livingAdultAnimals[i] == null)
+                livingAdultAnimals.RemoveAt(i);
         }
-        livingAnimals.Add(animal);
-        livingAnimals = livingAnimals.Distinct().ToList();
+        livingAdultAnimals.Add(animal);
+        livingAdultAnimals = livingAdultAnimals.Distinct().ToList();
+        CalculateAvarageGenes(animal);
     }
-    public void removeFromLivingAnimals(Animal animal)
+    public void RemoveFromLivingAdultAnimals(Animal animal)
     {
-        livingAnimals.Remove(animal);
-        for (var i = livingAnimals.Count - 1; i > -1; i--)
+        livingAdultAnimals.Remove(animal);
+        for (var i = livingAdultAnimals.Count - 1; i > -1; i--)
         {
-            if (livingAnimals[i] == null)
-                livingAnimals.RemoveAt(i);
+            if (livingAdultAnimals[i] == null)
+                livingAdultAnimals.RemoveAt(i);
         }
-        livingAnimals = livingAnimals.Distinct().ToList();
+        livingAdultAnimals = livingAdultAnimals.Distinct().ToList();
+    }
+
+    private void CalculateAvarageGenes(Animal animal)
+    {
+        avAnimalAttr.normalSpeed = CalculateNewAvarage(animal.normalSpeed, avAnimalAttr.normalSpeed, totalExistedAnimalsInMinute);
+        avAnimalAttr.waitTime = CalculateNewAvarage(animal.waitTime, avAnimalAttr.waitTime, totalExistedAnimalsInMinute);
+        avAnimalAttr.minSearchDistance = CalculateNewAvarage(animal.minSearchDistance, avAnimalAttr.minSearchDistance, totalExistedAnimalsInMinute);
+        avAnimalAttr.maxHunger = CalculateNewAvarage(animal.maxHunger, avAnimalAttr.maxHunger, totalExistedAnimalsInMinute);
+        avAnimalAttr.maxThirst = CalculateNewAvarage(animal.maxThirst, avAnimalAttr.maxThirst, totalExistedAnimalsInMinute);
+        avAnimalAttr.maxReproduceUrge = CalculateNewAvarage(animal.maxReproduceUrge, avAnimalAttr.maxReproduceUrge, totalExistedAnimalsInMinute);
+        avAnimalAttr.howManyChildren = CalculateNewAvarage(animal.howManyChildren, avAnimalAttr.howManyChildren, totalExistedAnimalsInMinute);
+        avAnimalAttr.gettingHungryRate = CalculateNewAvarage(animal.gettingHungryRate, avAnimalAttr.gettingHungryRate, totalExistedAnimalsInMinute);
+        avAnimalAttr.gettingThirstyRate = CalculateNewAvarage(animal.gettingThirstyRate, avAnimalAttr.gettingThirstyRate, totalExistedAnimalsInMinute);
+        avAnimalAttr.gettingHornyRate = CalculateNewAvarage(animal.gettingHornyRate, avAnimalAttr.gettingHornyRate, totalExistedAnimalsInMinute);
+        avAnimalAttr.pregnantTimeRate = CalculateNewAvarage(animal.pregnantTimeRate, avAnimalAttr.pregnantTimeRate, totalExistedAnimalsInMinute);
+        avAnimalAttr.gettingFullMultiplier = CalculateNewAvarage(animal.gettingFullMultiplier, avAnimalAttr.gettingFullMultiplier, totalExistedAnimalsInMinute);
+        avAnimalAttr.drinkingRate = CalculateNewAvarage(animal.drinkingRate, avAnimalAttr.drinkingRate, totalExistedAnimalsInMinute);
+        avAnimalAttr.becomeAdultTime = CalculateNewAvarage(animal.becomeAdultTime, avAnimalAttr.becomeAdultTime, totalExistedAnimalsInMinute);
+    }
+
+    private float CalculateNewAvarage(float newValue, float exAvarage, int newArrayLength)
+    {
+        float exTotalValue = exAvarage * (newArrayLength - 1);
+        return (exTotalValue + newValue) / (newArrayLength);
+    }
+
+    private void ResetAnimalAttributesInMinute()
+    {
+        animalAttributesInMinute.Add(avAnimalAttr);
+        totalExistedAnimalsInMinute = 0;
+        Debug.Log(animalAttributesInMinute.Last<AnimalAttributes>().normalSpeed);
+        avAnimalAttr.resetVariables();
     }
 }
+

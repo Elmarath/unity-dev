@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MakeBirth : State
 {
-    private int howManyChildren = 3;
+    private float _howManyChildren;
     private float makingBirthTimeRate = 1f;
     private float totalBirthTime;
     private bool isBirthFinished;
@@ -16,10 +16,10 @@ public class MakeBirth : State
     public override void Enter()
     {
         base.Enter();
-        animal.howManyChildren = howManyChildren;
+        _howManyChildren = Mathf.Round(animal.howManyChildren);
         isBirthFinished = false;
-        totalBirthTime = ((float)(howManyChildren + 1) * makingBirthTimeRate);
-        for (int i = 0; i < howManyChildren; i++)
+        totalBirthTime = ((float)(_howManyChildren + 1) * makingBirthTimeRate);
+        for (int i = 0; i < _howManyChildren; i++)
         {
             float tempTime = (i + 1) * makingBirthTimeRate;
             animal.StartCoroutine("MakeBirthWithRate", tempTime);
