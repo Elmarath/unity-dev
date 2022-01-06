@@ -34,6 +34,7 @@ public class Animal : MonoBehaviour
     public float gettingFullMultiplier = 30f;
     public float drinkingRate = 30f;
     public float becomeAdultTime = 15f;
+    public float bornAfterSec = 0f;
     public Gender gender;
     [HideInInspector]
     public Animal maleParent;
@@ -403,6 +404,7 @@ public class Animal : MonoBehaviour
             pregnantTimeRate = 0f;
             gettingFullMultiplier = 50f;
             drinkingRate = 50f;
+            bornAfterSec = Time.timeSinceLevelLoad;
             // start bacame adult
             StartCoroutine("BecameAdult");
         }
@@ -478,6 +480,7 @@ public class Animal : MonoBehaviour
     public void DecideAdultGenes()
     {
         gender = (Gender)Random.Range(0, 2);
+
         normalSpeed = DecideNewGene(maleParent.normalSpeed, fameleParent.normalSpeed, 2f, 8f);
         viewRadius = DecideNewGene(maleParent.viewRadius, fameleParent.viewRadius, 6f, 20f);
         viewAngle = DecideNewGene(maleParent.viewAngle, fameleParent.viewAngle, 60f, 150f);
@@ -490,7 +493,7 @@ public class Animal : MonoBehaviour
         gettingHungryRate = DecideNewGene(maleParent.gettingHungryRate, fameleParent.gettingHungryRate, 0.5f, 3f);
         gettingThirstyRate = DecideNewGene(maleParent.gettingThirstyRate, fameleParent.gettingThirstyRate, 0.7f, 4f);
         gettingHornyRate = DecideNewGene(maleParent.gettingHungryRate, fameleParent.gettingHornyRate, 0.2f, 2f);
-        pregnantTimeRate = 10f;
+        pregnantTimeRate = DecideNewGene(maleParent.pregnantTimeRate, fameleParent.pregnantTimeRate, 15f, 25f);
         gettingFullMultiplier = DecideNewGene(maleParent.gettingFullMultiplier, fameleParent.gettingFullMultiplier, 50f, 70f);
         drinkingRate = DecideNewGene(maleParent.drinkingRate, fameleParent.drinkingRate, 15f, 70f);
     }

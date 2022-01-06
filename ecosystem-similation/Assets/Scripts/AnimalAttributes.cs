@@ -14,6 +14,7 @@ public struct AnimalAttributes
     public float gettingFullMultiplier;
     public float drinkingRate;
     public float becomeAdultTime;
+    public float bornAfterSec;
 
     public void resetVariables()
     {

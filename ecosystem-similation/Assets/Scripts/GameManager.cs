@@ -101,6 +101,7 @@ public class GameManager : MonoBehaviour
         avAnimalAttr.gettingFullMultiplier = CalculateNewAvarage(animal.gettingFullMultiplier, avAnimalAttr.gettingFullMultiplier, totalExistedAnimalsInMinute);
         avAnimalAttr.drinkingRate = CalculateNewAvarage(animal.drinkingRate, avAnimalAttr.drinkingRate, totalExistedAnimalsInMinute);
         avAnimalAttr.becomeAdultTime = CalculateNewAvarage(animal.becomeAdultTime, avAnimalAttr.becomeAdultTime, totalExistedAnimalsInMinute);
+        avAnimalAttr.bornAfterSec = Time.timeSinceLevelLoad;
     }
 
     private float CalculateNewAvarage(float newValue, float exAvarage, int newArrayLength)
@@ -113,7 +114,7 @@ public class GameManager : MonoBehaviour
     {
         animalAttributesInMinute.Add(avAnimalAttr);
         totalExistedAnimalsInMinute = 0;
-        Debug.Log(animalAttributesInMinute.Last<AnimalAttributes>().normalSpeed);
+        Debug.Log(avAnimalAttr.bornAfterSec);
         avAnimalAttr.resetVariables();
     }
 }
