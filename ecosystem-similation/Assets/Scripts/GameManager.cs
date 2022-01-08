@@ -12,17 +12,21 @@ public class GameManager : MonoBehaviour
     public GameObject initAnimals;
     public List<Animal> livingAdultAnimals = new List<Animal>();
     public List<AnimalAttributes> animalAttributesInMinute = new List<AnimalAttributes>();
+    private GameObject UiElements;
+    public GameObject UiGeneElements;
     private int totalExistedAnimalsInMinute = 0;
     private float m_FixedDeltaTime;
+    private bool isUiElementsActive = true;
 
     void Awake()
     {
+        UiElements = GameObject.Find("UiManager");
+        Debug.Log(UiGeneElements);
         this.m_FixedDeltaTime = Time.fixedDeltaTime;
         this.timeScale = Time.timeScale;
         InvokeRepeating("ResetAnimalAttributesInMinute", 59f, 60f);
     }
 
-    // Update is called once per frame
     void Update()
     {
         timeScale = Time.timeScale;
@@ -41,13 +45,15 @@ public class GameManager : MonoBehaviour
             Debug.Log("Initializing new animals");
             Instantiate(initAnimals, new Vector3(0f, 0f, 0f), transform.rotation);
         }
-        
-        if(Input.GetKeyDown(KeyCode.P)){
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
             ReloadScene();
         }
     }
 
-    public void FasterTime(){
+    public void FasterTime()
+    {
         if (Time.timeScale >= 1f && Time.timeScale < 52f)
         {
             Time.timeScale += 3f;
@@ -57,19 +63,20 @@ public class GameManager : MonoBehaviour
             Time.timeScale += 0.2f;
         }
         // The fixed delta time will now be 0.02 real-time seconds per frame
-       Time.fixedDeltaTime = this.m_FixedDeltaTime * Time.timeScale;
+        Time.fixedDeltaTime = this.m_FixedDeltaTime * Time.timeScale;
     }
-    public void SlowTime(){
+    public void SlowTime()
+    {
         if (Time.timeScale >= 4f)
-            {
-                Time.timeScale -= 3f;
-            }
-            else if (Time.timeScale >= 0.3 && Time.timeScale <= 1.1f)
-            {
-                Time.timeScale -= 0.2f;
-            }
-            // The fixed delta time will now be 0.02 real-time seconds per frame
-            Time.fixedDeltaTime = this.m_FixedDeltaTime * Time.timeScale;
+        {
+            Time.timeScale -= 3f;
+        }
+        else if (Time.timeScale >= 0.3 && Time.timeScale <= 1.1f)
+        {
+            Time.timeScale -= 0.2f;
+        }
+        // The fixed delta time will now be 0.02 real-time seconds per frame
+        Time.fixedDeltaTime = this.m_FixedDeltaTime * Time.timeScale;
     }
 
     public void AddToLivingAdultAnimals(Animal animal)
@@ -94,6 +101,35 @@ public class GameManager : MonoBehaviour
         }
         livingAdultAnimals = livingAdultAnimals.Distinct().ToList();
     }
+
+    public void DisableGameObject(GameObject gameObject_)
+    {
+        gameObject_.SetActive(false);
+    }
+
+    public void EnableGameObject(GameObject gameObject_)
+    {
+        gameObject_.SetActive(true);
+    }
+
+    public void ToggleUIElements()
+    {
+        if (UiElements.activeSelf)
+            DisableGameObject(UiElements);
+        else
+            EnableGameObject(UiElements);
+    }
+
+    public void ToggeleGenesUI()
+    {
+        if (UiGeneElements.activeSelf)
+        {
+            DisableGameObject(UiGeneElements);
+        }
+        else
+            EnableGameObject(UiGeneElements);
+    }
+
 
     private void CalculateAvarageGenes(Animal animal)
     {
@@ -128,9 +164,10 @@ public class GameManager : MonoBehaviour
         avAnimalAttr.resetVariables();
     }
 
-    public void ReloadScene(){
-         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-         Time.timeScale = 1f;
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Time.timeScale = 1f;
     }
 }
 

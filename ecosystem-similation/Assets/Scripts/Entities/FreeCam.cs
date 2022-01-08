@@ -48,7 +48,6 @@ public class FreeCam : MonoBehaviour
     /// <summary>
     /// Set to true when free looking (on right mouse button).
     /// </summary>
-    private bool looking = false;
     private bool isGoingForward = false;
 
     void FixedUpdate()
@@ -96,14 +95,13 @@ public class FreeCam : MonoBehaviour
             transform.position = transform.position + (-Vector3.up * movementSpeed * Time.deltaTime);
         }
 
-        if (looking)
-        {
-            float newRotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * freeLookSensitivity;
-            float newRotationY = transform.localEulerAngles.x - Input.GetAxis("Mouse Y") * freeLookSensitivity;
-            transform.localEulerAngles = new Vector3(newRotationY, newRotationX, 0f);
-        }
+        float newRotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * freeLookSensitivity;
+        float newRotationY = transform.localEulerAngles.x - Input.GetAxis("Mouse Y") * freeLookSensitivity;
+        transform.localEulerAngles = new Vector3(newRotationY, newRotationX, 0f);
 
-        if(isGoingForward){
+
+        if (isGoingForward)
+        {
             transform.position = transform.position + (transform.forward * movementSpeed * Time.deltaTime);
         }
 
@@ -124,7 +122,8 @@ public class FreeCam : MonoBehaviour
         }
     }
 
-    public void GoForward(){
+    public void GoForward()
+    {
         isGoingForward = !isGoingForward;
     }
 
@@ -138,7 +137,6 @@ public class FreeCam : MonoBehaviour
     /// </summary>
     public void StartLooking()
     {
-        looking = true;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -148,7 +146,6 @@ public class FreeCam : MonoBehaviour
     /// </summary>
     public void StopLooking()
     {
-        looking = false;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
