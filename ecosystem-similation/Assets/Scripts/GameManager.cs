@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         UiElements = GameObject.Find("UiManager");
-        Debug.Log(UiGeneElements);
         this.m_FixedDeltaTime = Time.fixedDeltaTime;
         this.timeScale = Time.timeScale;
         InvokeRepeating("ResetAnimalAttributesInMinute", 59f, 60f);
