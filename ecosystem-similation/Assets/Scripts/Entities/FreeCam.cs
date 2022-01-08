@@ -49,6 +49,7 @@ public class FreeCam : MonoBehaviour
     /// Set to true when free looking (on right mouse button).
     /// </summary>
     private bool looking = false;
+    private bool isGoingForward = false;
 
     void FixedUpdate()
     {
@@ -102,6 +103,10 @@ public class FreeCam : MonoBehaviour
             transform.localEulerAngles = new Vector3(newRotationY, newRotationX, 0f);
         }
 
+        if(isGoingForward){
+            transform.position = transform.position + (transform.forward * movementSpeed * Time.deltaTime);
+        }
+
         float axis = Input.GetAxis("Mouse ScrollWheel");
         if (axis != 0)
         {
@@ -113,10 +118,14 @@ public class FreeCam : MonoBehaviour
         {
             StartLooking();
         }
-        else if (Input.GetKeyUp(KeyCode.Mouse1))
+        else if (Input.GetKeyUp(KeyCode.Mouse2))
         {
             StopLooking();
         }
+    }
+
+    public void GoForward(){
+        isGoingForward = !isGoingForward;
     }
 
     void OnDisable()

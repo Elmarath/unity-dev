@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -24,27 +25,42 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         timeScale = Time.timeScale;
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            if (Time.timeScale >= 1f && Time.timeScale < 52f)
-            {
-                Time.timeScale += 3f;
-            }
-            else if (Time.timeScale >= 0.1 && Time.timeScale <= 1.1f)
-            {
-                Time.timeScale += 0.2f;
-            }
-            // The fixed delta time will now be 0.02 real-time seconds per frame
-            Time.fixedDeltaTime = this.m_FixedDeltaTime * Time.timeScale;
-
+            FasterTime();
         }
 
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            if (Time.timeScale >= 4f)
+            SlowTime();
+        }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Debug.Log("Initializing new animals");
+            Instantiate(initAnimals, new Vector3(0f, 0f, 0f), transform.rotation);
+        }
+        
+        if(Input.GetKeyDown(KeyCode.P)){
+            ReloadScene();
+        }
+    }
+
+    public void FasterTime(){
+        if (Time.timeScale >= 1f && Time.timeScale < 52f)
+        {
+            Time.timeScale += 3f;
+        }
+        else if (Time.timeScale >= 0.1 && Time.timeScale <= 1.1f)
+        {
+            Time.timeScale += 0.2f;
+        }
+        // The fixed delta time will now be 0.02 real-time seconds per frame
+       Time.fixedDeltaTime = this.m_FixedDeltaTime * Time.timeScale;
+    }
+    public void SlowTime(){
+        if (Time.timeScale >= 4f)
             {
                 Time.timeScale -= 3f;
             }
@@ -54,12 +70,6 @@ public class GameManager : MonoBehaviour
             }
             // The fixed delta time will now be 0.02 real-time seconds per frame
             Time.fixedDeltaTime = this.m_FixedDeltaTime * Time.timeScale;
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Debug.Log("Initializing new animals");
-            Instantiate(initAnimals, new Vector3(0f, 0f, 0f), transform.rotation);
-        }
     }
 
     public void AddToLivingAdultAnimals(Animal animal)
@@ -116,6 +126,11 @@ public class GameManager : MonoBehaviour
         totalExistedAnimalsInMinute = 0;
         Debug.Log(avAnimalAttr.bornAfterSec);
         avAnimalAttr.resetVariables();
+    }
+
+    public void ReloadScene(){
+         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+         Time.timeScale = 1f;
     }
 }
 
