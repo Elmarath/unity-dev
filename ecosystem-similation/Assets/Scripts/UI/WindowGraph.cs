@@ -7,11 +7,24 @@ public class WindowGraph : MonoBehaviour
 {
     [SerializeField] private Sprite circleSprite;
     private RectTransform graphContainer;
+    public List<float> valueList;
 
-    private void Awake()
+    private void OnEnable()
     {
         graphContainer = transform.Find("GraphContainer").GetComponent<RectTransform>();
-        List<int> valueList = new List<int>() { 5, 80, 12, 16, 22, 16 };
+
+        foreach (Transform child in graphContainer.transform)
+        {
+            if (child.name != "Background")
+                GameObject.Destroy(child.gameObject);
+        }
+    }
+
+    public void Init(List<float> list)
+    {
+        graphContainer = transform.Find("GraphContainer").GetComponent<RectTransform>();
+        valueList = null;
+        valueList = list;
         ShowGraph(valueList);
     }
 
@@ -28,17 +41,25 @@ public class WindowGraph : MonoBehaviour
         return gameObject;
     }
 
-    private void ShowGraph(List<int> valueList)
+    private void ShowGraph(List<float> valueList)
     {
-        float graphHeight = graphContainer.sizeDelta.y;
-        float yMinimum = 100f;
+        float yMinimum = 60f;
         float xSize = 50f;
+        float graphHeight = graphContainer.sizeDelta.y - yMinimum;
+
         GameObject lastCircleGameObject = null;
 
-        for (int i = 0; i < valueList.Count; i++)
+        int start = valueList.Count - 20;
+        if (start < 0)
+            start = 0;
+        int finish = valueList.Count;
+        int cycleCount = finish - start;
+
+
+        for (int i = 0; i < cycleCount; i++)
         {
             float xPosition = xSize + i * xSize;
-            float yPosition = (valueList[i] / yMinimum) * graphHeight;
+            float yPosition = (valueList[i + start] / yMinimum) * graphHeight + yMinimum / 2;
             GameObject circleGameObject = CreateCircle(new Vector2(xPosition, yPosition));
 
             if (lastCircleGameObject != null)
