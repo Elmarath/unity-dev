@@ -159,7 +159,6 @@ public class GameManager : MonoBehaviour
     {
         animalAttributesInMinute.Add(avAnimalAttr);
         totalExistedAnimalsInMinute = 0;
-        Debug.Log(avAnimalAttr.normalSpeed);
         avAnimalAttr.resetVariables();
     }
 
