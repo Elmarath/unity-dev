@@ -371,7 +371,7 @@ public class Animal : MonoBehaviour
         yield return new WaitForSeconds(becomeAdultTime);
         DecideAdultGenes();
         gameManager.AddToLivingAdultAnimals(this);
-
+        gameManager.allLivedAdultAnimals.Add(this);
     }
 
     public void Initialize(Animal _maleParent, Animal _fameleParent)

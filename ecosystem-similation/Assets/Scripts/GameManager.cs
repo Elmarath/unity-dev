@@ -11,7 +11,9 @@ public class GameManager : MonoBehaviour
     public float timeScale;
     public GameObject initAnimals;
     public List<Animal> livingAdultAnimals = new List<Animal>();
+    public List<Animal> allLivedAdultAnimals = new List<Animal>();
     public List<AnimalAttributes> animalAttributesInMinute = new List<AnimalAttributes>();
+    public HandleTextFile textHandler;
     private GameObject UiElements;
     public GameObject UiGeneElements;
     private int totalExistedAnimalsInMinute = 0;
@@ -20,6 +22,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        textHandler = GetComponent<HandleTextFile>();
         UiElements = GameObject.Find("UiManager");
         this.m_FixedDeltaTime = Time.fixedDeltaTime;
         this.timeScale = Time.timeScale;
@@ -166,6 +169,7 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         Time.timeScale = 1f;
+        textHandler.PrintAnimals(allLivedAdultAnimals);
     }
 }
 
