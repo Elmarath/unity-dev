@@ -43,7 +43,8 @@ public class WindowGraph : MonoBehaviour
 
     private void ShowGraph(List<float> valueList)
     {
-        float yMinimum = 60f;
+        float maxValue = Mathf.Max(valueList.ToArray());
+        float yMinimum = maxValue;
         float xSize = 50f;
         float graphHeight = graphContainer.sizeDelta.y - yMinimum;
 
