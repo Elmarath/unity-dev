@@ -5763,6 +5763,7 @@ GameObject:
   m_Component:
   - component: {fileID: 769791057}
   - component: {fileID: 769791056}
+  - component: {fileID: 769791058}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -5786,6 +5787,8 @@ MonoBehaviour:
   timeScale: 0
   initAnimals: {fileID: 9206268533440631702, guid: 577901d079bbd4fc792ebff00d8f4822, type: 3}
   livingAdultAnimals: []
+  allLivedAdultAnimals: []
+  textHandler: {fileID: 0}
   UiGeneElements: {fileID: 272614614}
 --- !u!4 &769791057
 Transform:
@@ -5801,6 +5804,18 @@ Transform:
   m_Father: {fileID: 115854587}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &769791058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 769791055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a93da518c25445268611deb4e180c37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &778815120
 GameObject:
   m_ObjectHideFlags: 0
